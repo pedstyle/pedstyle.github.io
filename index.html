@@ -255,7 +255,7 @@
         }
         #brand-name img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
 
-        .member-container { max-width: 960px; margin: 0 auto; padding: 35px 20px 100px; }
+        .member-container { max-width: 1240px; margin: 0 auto; padding: 35px 20px 100px; }
 
         .page-hero-header {
             text-align: center;
@@ -342,10 +342,10 @@
             font-family: 'Orbitron', sans-serif;
         }
 
-        /* --- Cards Grid --- */
+        /* --- Cards Grid (3 Columns) --- */
         .roster-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 16px;
         }
 
@@ -811,6 +811,11 @@
         }
 
         #youtube-player { position: absolute; top: -1000px; left: -1000px; visibility: hidden; }
+
+        @media (max-width: 1080px) {
+            .roster-grid { grid-template-columns: repeat(2, 1fr); }
+            .member-container { max-width: 900px; }
+        }
 
         @media (max-width: 768px) {
             .roster-grid { grid-template-columns: 1fr; }
