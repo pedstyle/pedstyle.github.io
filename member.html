@@ -46,7 +46,7 @@
         }
         .modal-box {
             background: #111116; border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 30px; border-radius: 20px; width: 90%; max-width: 440px;
+            padding: 30px; border-radius: 20px; width: 90%; max-width: 420px;
             text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.05);
         }
         .modal-box h3 { font-family: 'Orbitron'; margin-bottom: 20px; color: #fff; letter-spacing: 2px; font-size: 1.1rem; }
@@ -80,10 +80,10 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
 
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 
         .input-group { display: flex; flex-direction: column; gap: 6px; text-align: left; }
-        .input-group label { font-size: 0.8rem; color: rgba(255, 255, 255, 0.6); font-family: 'Kanit'; }
+        .input-group label { font-size: 0.82rem; color: rgba(255, 255, 255, 0.7); font-family: 'Kanit'; }
 
         input, select { 
             background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-color); padding: 12px 14px; 
@@ -144,7 +144,7 @@
             gap: 16px;
         }
 
-        /* --- Member Card Styling (Matching Design) --- */
+        /* --- Member Card Styling (Exact Match) --- */
         .member-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -185,9 +185,10 @@
             width: 100%;
             height: 100%;
             border-radius: 14px;
-            object-fit: cover;
+            object-fit: contain;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            background: #111;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 6px;
         }
         .status-dot {
             position: absolute;
@@ -307,6 +308,15 @@
         .fade-in { animation: fadeIn 0.4s ease forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* Empty State */
+        .empty-placeholder {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: 'Kanit';
+            font-size: 0.95rem;
+        }
+
         @media (max-width: 768px) {
             .roster-grid { grid-template-columns: 1fr; }
             nav { padding: 15px 4%; }
@@ -369,36 +379,21 @@
                     
                     <div class="input-group">
                         <label>ชื่อสมาชิก *</label>
-                        <input type="text" id="newName" placeholder="เช่น Best Wellesley">
+                        <input type="text" id="newName" placeholder="เช่น Best Wellesley" onkeydown="if(event.key === 'Enter') saveMember()">
                     </div>
 
                     <div class="input-group">
-                        <label>ลิงก์ Facebook (URL)</label>
-                        <input type="text" id="newFB" placeholder="https://facebook.com/...">
+                        <label>ลิงก์ Facebook (URL) *</label>
+                        <input type="text" id="newFB" placeholder="https://facebook.com/..." onkeydown="if(event.key === 'Enter') saveMember()">
                     </div>
 
                     <div class="input-group">
-                        <label>ลิงก์รูปโปรไฟล์ (URL) - เว้นว่างได้</label>
-                        <input type="text" id="newImg" placeholder="https://.../photo.png">
-                    </div>
-
-                    <div class="input-group">
-                        <label>ตำแหน่ง (Role)</label>
+                        <label>ตำแหน่ง (Role) *</label>
                         <select id="newRole">
                             <option value="leader">Leader</option>
                             <option value="founder">Founder</option>
                             <option value="member">Member</option>
                         </select>
-                    </div>
-
-                    <div class="input-group">
-                        <label>ลิงก์ YouTube (Optional)</label>
-                        <input type="text" id="newYT" placeholder="https://youtube.com/...">
-                    </div>
-
-                    <div class="input-group">
-                        <label>ลิงก์ TikTok (Optional)</label>
-                        <input type="text" id="newTK" placeholder="https://tiktok.com/...">
                     </div>
                 </div>
 
@@ -452,6 +447,12 @@
                 </div>
                 <div class="roster-grid" id="memberList"></div>
             </div>
+
+            <div id="emptyNotice" class="empty-placeholder">
+                <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.4;"></i>
+                <p>ยังไม่มีรายชื่อสมาชิก</p>
+                <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px;">(กดปุ่ม ADMIN เพื่อเข้าสู่ระบบและเริ่มเพิ่มสมาชิก)</p>
+            </div>
         </div>
     </div>
 
@@ -471,16 +472,8 @@
         let isAdmin = false;
         let deleteTargetId = null;
 
-        // Sample template data matching image if database is completely empty
-        const defaultSampleRoster = {
-            "s1": { name: "Best Wellesley", role: "leader", fb: "#", img: "logo.png" },
-            "s2": { name: "Fong Kodomo", role: "leader", fb: "#", img: "logo.png" },
-            "s3": { name: "Moomin Wellesley", role: "leader", fb: "#", img: "logo.png" },
-            "s4": { name: "Piriya Wellesley", role: "leader", fb: "#", img: "logo.png" },
-            "s5": { name: "Surf Wellesley", role: "leader", fb: "#", img: "logo.png" },
-            "s6": { name: "Time kodomo", role: "leader", fb: "#", img: "logo.png" },
-            "s7": { name: "Uno Wellesley", role: "leader", fb: "#", img: "logo.png" }
-        };
+        // Clear previous sample names so it starts fresh
+        localStorage.removeItem('pedstyle_roster_sample');
 
         function openAdminModal() {
             if(isAdmin) {
@@ -541,18 +534,18 @@
             if (db) {
                 db.ref('roster').on('value', snap => {
                     let data = snap.val();
-                    if(!data || Object.keys(data).length === 0) {
+                    if(!data) {
                         const localData = localStorage.getItem('pedstyle_roster');
-                        data = localData ? JSON.parse(localData) : defaultSampleRoster;
+                        data = localData ? JSON.parse(localData) : {};
                     }
                     displayRosterData(data);
                 }, err => {
                     const localData = localStorage.getItem('pedstyle_roster');
-                    displayRosterData(localData ? JSON.parse(localData) : defaultSampleRoster);
+                    displayRosterData(localData ? JSON.parse(localData) : {});
                 });
             } else {
                 const localData = localStorage.getItem('pedstyle_roster');
-                displayRosterData(localData ? JSON.parse(localData) : defaultSampleRoster);
+                displayRosterData(localData ? JSON.parse(localData) : {});
             }
         }
 
@@ -565,59 +558,64 @@
             Object.values(lists).forEach(id => document.getElementById(id).innerHTML = "");
             Object.values(sections).forEach(id => document.getElementById(id).classList.add('hidden'));
 
-            if(!data) return;
+            let totalCount = 0;
 
-            Object.keys(data).forEach(id => {
-                const item = data[id];
-                const role = item.role || 'member';
-                if (!lists[role]) return;
+            if(data && Object.keys(data).length > 0) {
+                Object.keys(data).forEach(id => {
+                    const item = data[id];
+                    const role = item.role || 'member';
+                    if (!lists[role]) return;
 
-                countCounters[role]++;
-                const displayImg = (item.img && item.img.trim() !== "") ? item.img : "logo.png";
+                    totalCount++;
+                    countCounters[role]++;
 
-                const card = document.createElement('div');
-                card.className = 'member-card fade-in';
+                    const card = document.createElement('div');
+                    card.className = 'member-card fade-in';
 
-                // Facebook / Social buttons
-                const fbHTML = item.fb ? `<a href="${item.fb}" target="_blank" class="card-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : '';
-                const ytHTML = item.yt ? `<a href="${item.yt}" target="_blank" class="card-social-btn" title="YouTube"><i class="fab fa-youtube"></i></a>` : '';
-                const tkHTML = item.tk ? `<a href="${item.tk}" target="_blank" class="card-social-btn" title="TikTok"><i class="fab fa-tiktok"></i></a>` : '';
+                    // Facebook button
+                    const fbHTML = item.fb ? `<a href="${item.fb}" target="_blank" class="card-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : '';
 
-                card.innerHTML = `
-                    <div style="width: 100%;">
-                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                            <div class="card-main">
-                                <div class="avatar-wrap">
-                                    <img src="${displayImg}" alt="${item.name}" class="card-avatar" onerror="this.src='logo.png'">
-                                    <span class="status-dot"></span>
+                    card.innerHTML = `
+                        <div style="width: 100%;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="card-main">
+                                    <div class="avatar-wrap">
+                                        <img src="logo.png" alt="PEDSTYLE" class="card-avatar">
+                                        <span class="status-dot"></span>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="card-name">${item.name}</div>
+                                        <div class="card-role-badge">${role.toUpperCase()}</div>
+                                    </div>
                                 </div>
-                                <div class="card-info">
-                                    <div class="card-name">${item.name}</div>
-                                    <div class="card-role-badge">${role.toUpperCase()}</div>
-                                </div>
-                            </div>
 
-                            <div class="card-actions">
-                                <i class="fa-solid fa-crown role-crown"></i>
-                                <div class="social-btns">
-                                    ${fbHTML}
-                                    ${ytHTML}
-                                    ${tkHTML}
+                                <div class="card-actions">
+                                    <i class="fa-solid fa-crown role-crown"></i>
+                                    <div class="social-btns">
+                                        ${fbHTML}
+                                    </div>
                                 </div>
                             </div>
+
+                            ${isAdmin ? `
+                            <div class="admin-mini-controls">
+                                <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.fb||'').replace(/'/g, "\\'")}', '${role}')"><i class="fas fa-edit"></i> แก้ไข</button>
+                                <button class="mini-btn" style="color: #ff6b81;" onclick="askDeleteMember('${id}', '${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> ลบ</button>
+                            </div>` : ''}
                         </div>
+                    `;
 
-                        ${isAdmin ? `
-                        <div class="admin-mini-controls">
-                            <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.img||'').replace(/'/g, "\\'")}', '${(item.fb||'').replace(/'/g, "\\'")}', '${role}', '${(item.yt||'').replace(/'/g, "\\'")}', '${(item.tk||'').replace(/'/g, "\\'")}')"><i class="fas fa-edit"></i> แก้ไข</button>
-                            <button class="mini-btn" style="color: #ff6b81;" onclick="askDeleteMember('${id}', '${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> ลบ</button>
-                        </div>` : ''}
-                    </div>
-                `;
+                    document.getElementById(lists[role]).appendChild(card);
+                    document.getElementById(sections[role]).classList.remove('hidden');
+                });
+            }
 
-                document.getElementById(lists[role]).appendChild(card);
-                document.getElementById(sections[role]).classList.remove('hidden');
-            });
+            // Empty state notice
+            const emptyNotice = document.getElementById('emptyNotice');
+            if (emptyNotice) {
+                if (totalCount === 0) emptyNotice.classList.remove('hidden');
+                else emptyNotice.classList.add('hidden');
+            }
 
             // Update Counts in Section Headers
             Object.keys(countCounters).forEach(r => {
@@ -631,20 +629,15 @@
             if(!isAdmin) return;
             const id = document.getElementById('editMemberId').value;
             const nameVal = document.getElementById('newName').value.trim();
-            const imgVal = document.getElementById('newImg').value.trim();
             const fbVal = document.getElementById('newFB').value.trim();
-            const ytVal = document.getElementById('newYT').value.trim();
-            const tkVal = document.getElementById('newTK').value.trim();
             const roleVal = document.getElementById('newRole').value;
 
             if(!nameVal) return showToast("กรุณาใส่ชื่อสมาชิก");
+            if(!fbVal) return showToast("กรุณาใส่ลิงก์ Facebook");
 
             const data = {
                 name: nameVal,
-                img: imgVal || "logo.png",
                 fb: fbVal,
-                yt: ytVal,
-                tk: tkVal,
                 role: roleVal
             };
 
@@ -654,9 +647,9 @@
                 else db.ref('roster').push(data);
             }
 
-            // Also save locally as fallback
+            // Also save locally as backup
             let localData = localStorage.getItem('pedstyle_roster');
-            let rosterObj = localData ? JSON.parse(localData) : { ...defaultSampleRoster };
+            let rosterObj = localData ? JSON.parse(localData) : {};
             const targetId = id || ('local_' + Date.now());
             rosterObj[targetId] = data;
             localStorage.setItem('pedstyle_roster', JSON.stringify(rosterObj));
@@ -689,13 +682,10 @@
             }
         };
 
-        function prepareEdit(id, name, img, fb, role, yt, tk) {
+        function prepareEdit(id, name, fb, role) {
             document.getElementById('editMemberId').value = id;
             document.getElementById('newName').value = name;
-            document.getElementById('newImg').value = (img === 'logo.png') ? '' : img;
             document.getElementById('newFB').value = (fb === '#') ? '' : fb;
-            document.getElementById('newYT').value = yt || "";
-            document.getElementById('newTK').value = tk || "";
             document.getElementById('newRole').value = role;
             document.getElementById('saveBtn').innerHTML = "<i class='fas fa-save'></i> UPDATE DATA";
             document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
@@ -704,10 +694,7 @@
         function resetForm() {
             document.getElementById('editMemberId').value = "";
             document.getElementById('newName').value = "";
-            document.getElementById('newImg').value = "";
             document.getElementById('newFB').value = "";
-            document.getElementById('newYT').value = "";
-            document.getElementById('newTK').value = "";
             document.getElementById('saveBtn').innerHTML = "<i class='fas fa-check'></i> SAVE DATA";
         }
 
