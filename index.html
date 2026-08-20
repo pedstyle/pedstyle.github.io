@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEDSTYLE</title>
-    
+
     <link rel="icon" type="image/png" href="logo.png">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;500;600;700&family=Inter:wght@300;400;500&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Firebase Realtime Database SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -45,7 +48,10 @@
         /* --- Background & Effects --- */
         .bg-wrapper {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             z-index: -2;
             background: radial-gradient(circle at center, #14141c 0%, #050508 100%);
             background-attachment: fixed;
@@ -53,8 +59,11 @@
 
         .vignette {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.8) 100%);
             z-index: -1;
             pointer-events: none;
         }
@@ -62,7 +71,10 @@
         /* --- Overlay (Click To Enter) --- */
         #overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background: #000;
             z-index: 10000;
             display: flex;
@@ -72,8 +84,9 @@
             cursor: pointer;
             transition: opacity 1s cubic-bezier(0.7, 0, 0.3, 1), visibility 1s;
         }
-        #overlay.fade-out { 
-            opacity: 0; 
+
+        #overlay.fade-out {
+            opacity: 0;
             visibility: hidden;
             pointer-events: none;
         }
@@ -94,15 +107,27 @@
         }
 
         @keyframes pulse-glow {
-            0% { transform: scale(1); opacity: 0.6; }
-            50% { transform: scale(1.08); opacity: 1; filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6)); }
-            100% { transform: scale(1); opacity: 0.6; }
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 1;
+                filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
         }
 
         .main-enter-text {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.2rem;
-            letter-spacing: 12px; 
+            letter-spacing: 12px;
             color: #ffffff;
             margin-bottom: 10px;
             font-weight: 400;
@@ -121,6 +146,7 @@
             transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
         }
+
         .spa-view.hidden-view {
             display: none !important;
             opacity: 0;
@@ -157,6 +183,7 @@
             align-items: center;
             z-index: 100;
         }
+
         .nav-logo {
             display: flex;
             align-items: center;
@@ -168,8 +195,20 @@
             font-weight: 700;
             letter-spacing: 1px;
         }
-        .nav-logo img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
-        .nav-text { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
+
+        .nav-logo img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+        }
+
+        .nav-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
 
         .home-container {
             text-align: center;
@@ -188,14 +227,14 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
         }
 
         .home-subtext {
             font-family: 'Orbitron', sans-serif;
             font-size: 0.65rem;
             letter-spacing: 5px;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255, 255, 255, 0.4);
             margin-bottom: 45px;
             text-transform: uppercase;
         }
@@ -218,20 +257,34 @@
             backdrop-filter: blur(10px);
             cursor: pointer;
         }
+
         .btn-enter-member:hover {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.4);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
         }
-        .btn-text-main { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: #fff; }
-        .btn-text-sub { font-size: 0.5rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); margin-top: 5px; }
+
+        .btn-text-main {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .btn-text-sub {
+            font-size: 0.5rem;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.3);
+            margin-top: 5px;
+        }
 
         .home-footer {
             position: absolute;
             bottom: 30px;
             font-size: 0.55rem;
-            color: rgba(255,255,255,0.2);
+            color: rgba(255, 255, 255, 0.2);
             letter-spacing: 3px;
             font-family: 'Orbitron', sans-serif;
         }
@@ -243,24 +296,49 @@
             min-height: 100vh;
         }
 
-        nav.member-nav { 
-            display: flex; justify-content: space-between; padding: 18px 6%; 
-            background: rgba(10, 10, 14, 0.85); align-items: center; position: sticky; 
-            top: 0; z-index: 100; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+        nav.member-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 18px 6%;
+            background: rgba(10, 10, 14, 0.85);
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border-bottom: 1px solid var(--border-color);
         }
-        #brand-name { 
-            font-weight: 900; letter-spacing: 3px; font-family: 'Orbitron'; font-size: 1.15rem; color: #fff;
-            display: flex; align-items: center; gap: 12px;
-        }
-        #brand-name img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
 
-        .member-container { max-width: 1240px; margin: 0 auto; padding: 35px 20px 100px; }
+        #brand-name {
+            font-weight: 900;
+            letter-spacing: 3px;
+            font-family: 'Orbitron';
+            font-size: 1.15rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #brand-name img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+        }
+
+        .member-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 35px 20px 100px;
+        }
 
         .page-hero-header {
             text-align: center;
             margin: 25px 0 45px;
         }
+
         .hero-title {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(2.4rem, 7vw, 4.2rem);
@@ -271,45 +349,100 @@
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 25px rgba(255,255,255,0.25));
+            filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.25));
         }
+
         .hero-subtext {
             font-family: 'Orbitron', sans-serif;
             font-size: 0.7rem;
             letter-spacing: 6px;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
         }
 
         /* --- Admin Panel --- */
         .glass-panel {
-            background: rgba(16, 16, 22, 0.85); border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px; padding: 25px; margin-bottom: 35px;
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            background: rgba(16, 16, 22, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 35px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-
-        .input-group { display: flex; flex-direction: column; gap: 6px; text-align: left; }
-        .input-group label { font-size: 0.82rem; color: rgba(255, 255, 255, 0.7); font-family: 'Kanit'; }
-
-        input, select { 
-            background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-color); padding: 12px 14px; 
-            color: #fff; border-radius: 10px; font-family: 'Kanit'; outline: none; width: 100%;
-            transition: border 0.3s; font-size: 0.9rem;
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
         }
-        input:focus, select:focus { border-color: rgba(255, 255, 255, 0.4); }
 
-        .btn-action { 
-            background: #ffffff; color: #000; border: none; padding: 10px 22px; 
-            border-radius: 10px; font-weight: 700; font-family: 'Orbitron'; cursor: pointer; 
-            transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
-            justify-content: center; width: auto; font-size: 0.8rem; letter-spacing: 1px;
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
         }
-        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
-        .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+
+        .input-group label {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Kanit';
+        }
+
+        input,
+        select {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border-color);
+            padding: 12px 14px;
+            color: #fff;
+            border-radius: 10px;
+            font-family: 'Kanit';
+            outline: none;
+            width: 100%;
+            transition: border 0.3s;
+            font-size: 0.9rem;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-action {
+            background: #ffffff;
+            color: #000;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-family: 'Orbitron';
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            width: auto;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
 
         /* --- Section Header with Lines --- */
         .section-header {
@@ -319,10 +452,12 @@
             gap: 20px;
             margin: 45px 0 25px;
         }
+
         .header-line {
             flex: 1;
             height: 1px;
         }
+
         .section-title-badge {
             display: inline-flex;
             align-items: center;
@@ -332,9 +467,11 @@
             font-weight: 900;
             letter-spacing: 3px;
         }
+
         .header-icon {
             font-size: 0.95rem;
         }
+
         .section-count {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.45);
@@ -379,6 +516,7 @@
             flex-shrink: 0;
             margin-right: 15px;
         }
+
         .card-avatar {
             width: 100%;
             height: 100%;
@@ -387,6 +525,7 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             background: #111;
         }
+
         .status-dot {
             position: absolute;
             bottom: -2px;
@@ -404,6 +543,7 @@
             flex: 1;
             min-width: 0;
         }
+
         .card-name {
             font-family: 'Kanit', sans-serif;
             font-size: 1.05rem;
@@ -414,6 +554,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+
         .card-role-badge {
             display: inline-block;
             align-self: flex-start;
@@ -430,20 +571,24 @@
             border: 1.5px solid rgba(243, 212, 139, 0.55);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(243, 212, 139, 0.15);
         }
+
         .card-role-founder:hover {
             border-color: #f3d48b;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(243, 212, 139, 0.35);
         }
+
         .card-role-founder .card-role-badge {
             color: #f3d48b;
             border: 1px solid rgba(243, 212, 139, 0.5);
             background: rgba(243, 212, 139, 0.1);
             box-shadow: 0 0 10px rgba(243, 212, 139, 0.2);
         }
+
         .card-role-founder .role-crown {
             color: #f3d48b;
             filter: drop-shadow(0 0 8px rgba(243, 212, 139, 0.8));
         }
+
         .card-role-founder .status-dot {
             background: #f3d48b;
             box-shadow: 0 0 8px rgba(243, 212, 139, 0.9);
@@ -454,20 +599,24 @@
             border: 1.5px solid rgba(255, 71, 87, 0.55);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 71, 87, 0.15);
         }
+
         .card-role-leader:hover {
             border-color: #ff4757;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 71, 87, 0.35);
         }
+
         .card-role-leader .card-role-badge {
             color: #ff4757;
             border: 1px solid rgba(255, 71, 87, 0.5);
             background: rgba(255, 71, 87, 0.1);
             box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
         }
+
         .card-role-leader .role-crown {
             color: #ff4757;
             filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.8));
         }
+
         .card-role-leader .status-dot {
             background: #ff4757;
             box-shadow: 0 0 8px rgba(255, 71, 87, 0.9);
@@ -478,20 +627,24 @@
             border: 1.5px solid rgba(220, 225, 240, 0.45);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.15);
         }
+
         .card-role-member:hover {
             border-color: #ffffff;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 255, 255, 0.4);
         }
+
         .card-role-member .card-role-badge {
             color: #e4e7eb;
             border: 1px solid rgba(255, 255, 255, 0.4);
             background: rgba(255, 255, 255, 0.08);
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
+
         .card-role-member .role-crown {
             color: #dcdde1;
             filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
         }
+
         .card-role-member .status-dot {
             background: #ffffff;
             box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
@@ -506,6 +659,7 @@
             margin-left: 15px;
             flex-shrink: 0;
         }
+
         .role-crown {
             font-size: 0.85rem;
         }
@@ -515,6 +669,7 @@
             gap: 6px;
             align-items: center;
         }
+
         .card-social-btn {
             width: 34px;
             height: 34px;
@@ -529,6 +684,7 @@
             font-size: 0.95rem;
             transition: all 0.3s ease;
         }
+
         .card-social-btn:hover {
             border-color: rgba(255, 255, 255, 0.6);
             color: #ffffff;
@@ -544,6 +700,7 @@
             justify-content: flex-end;
             width: 100%;
         }
+
         .mini-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -554,18 +711,47 @@
             font-size: 0.75rem;
             transition: 0.3s;
         }
-        .mini-btn:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
 
-        .toast { 
-            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
-            background: #fff; color: #000; padding: 12px 35px; 
-            border-radius: 50px; font-weight: 900; z-index: 10001; font-size: 0.85rem;
-            font-family: 'Kanit', 'Orbitron'; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        .mini-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
         }
 
-        .hidden { display: none !important; }
-        .fade-in { animation: fadeIn 0.4s ease forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            color: #000;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 900;
+            z-index: 10001;
+            font-size: 0.85rem;
+            font-family: 'Kanit', 'Orbitron';
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         .empty-placeholder {
             text-align: center;
@@ -577,22 +763,53 @@
 
         /* --- Custom Modals --- */
         .custom-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            display: none; justify-content: center; align-items: center; z-index: 9999;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
         }
+
         .modal-box {
-            background: #111116; border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 30px; border-radius: 20px; width: 90%; max-width: 440px;
-            text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.05);
+            background: #111116;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.05);
         }
-        .modal-box h3 { font-family: 'Orbitron'; margin-bottom: 20px; color: #fff; letter-spacing: 2px; font-size: 1.1rem; }
+
+        .modal-box h3 {
+            font-family: 'Orbitron';
+            margin-bottom: 20px;
+            color: #fff;
+            letter-spacing: 2px;
+            font-size: 1.1rem;
+        }
 
         #video-jumpscare {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 10000; display: none; pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: none;
+            pointer-events: none;
         }
-        #video-jumpscare iframe { width: 100%; height: 100%; border: none; }
+
+        #video-jumpscare iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
         /* ================================================= */
         /* --- 💿 FLOATING VINYL MUSIC PLAYER (BOTTOM-RIGHT) --- */
@@ -621,8 +838,9 @@
             transform: translateX(10px);
             transition: all 0.3s ease;
             pointer-events: none;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
         }
+
         .vinyl-player-wrapper:hover .vinyl-info-box,
         .vinyl-info-box:focus-within,
         .vinyl-info-box.active {
@@ -630,6 +848,7 @@
             transform: translateX(0);
             pointer-events: auto;
         }
+
         .vinyl-song-title {
             font-size: 0.65rem;
             color: #fff;
@@ -639,9 +858,10 @@
             font-family: 'Kanit', sans-serif;
             font-weight: 500;
         }
+
         .vinyl-status {
             font-size: 0.5rem;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255, 255, 255, 0.4);
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             margin-top: 2px;
@@ -657,6 +877,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.08);
             pointer-events: auto;
         }
+
         .vol-btn-icon {
             font-size: 0.8rem;
             color: rgba(255, 255, 255, 0.7);
@@ -668,10 +889,12 @@
             align-items: center;
             justify-content: center;
         }
+
         .vol-btn-icon:hover {
             color: #fff;
             transform: scale(1.15);
         }
+
         .vinyl-slider {
             -webkit-appearance: none;
             appearance: none;
@@ -683,6 +906,7 @@
             cursor: pointer;
             transition: background 0.2s;
         }
+
         .vinyl-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
@@ -694,9 +918,11 @@
             box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
             transition: transform 0.1s;
         }
+
         .vinyl-slider::-webkit-slider-thumb:hover {
             transform: scale(1.3);
         }
+
         .vinyl-slider::-moz-range-thumb {
             width: 12px;
             height: 12px;
@@ -706,6 +932,7 @@
             border: none;
             box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
         }
+
         .vol-percent {
             font-family: 'Orbitron', sans-serif;
             font-size: 0.55rem;
@@ -720,7 +947,7 @@
             width: 75px;
             height: 75px;
             border-radius: 50%;
-            background: 
+            background:
                 radial-gradient(circle, #080808 30%, #181818 32%, #080808 35%, #1c1c1c 38%, #080808 42%, #181818 46%, #080808 50%, #1c1c1c 55%, #080808 60%, #151515 65%, #080808 70%),
                 #111;
             border: 2px solid rgba(255, 255, 255, 0.15);
@@ -733,6 +960,7 @@
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
             user-select: none;
         }
+
         .vinyl-disc:hover {
             transform: scale(1.08);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.25);
@@ -750,16 +978,23 @@
             animation-play-state: paused;
             position: relative;
         }
+
         .playing .vinyl-disc-inner {
             animation-play-state: running;
         }
+
         .playing .vinyl-disc {
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.3);
         }
 
         @keyframes rotateVinyl {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Center Album Art Label */
@@ -770,8 +1005,9 @@
             overflow: hidden;
             position: relative;
             border: 2px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 0 8px rgba(0,0,0,0.8);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
         }
+
         .vinyl-label img {
             width: 100%;
             height: 100%;
@@ -803,50 +1039,81 @@
             z-index: 10;
             opacity: 0;
             transition: opacity 0.2s ease;
-            filter: drop-shadow(0 0 6px rgba(0,0,0,0.9));
+            filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.9));
             pointer-events: none;
         }
+
         .vinyl-disc:hover .vinyl-action-icon {
             opacity: 1;
         }
 
-        #youtube-player { position: absolute; top: -1000px; left: -1000px; visibility: hidden; }
+        #youtube-player {
+            position: absolute;
+            top: -1000px;
+            left: -1000px;
+            visibility: hidden;
+        }
 
         @media (max-width: 1080px) {
-            .roster-grid { grid-template-columns: repeat(2, 1fr); }
-            .member-container { max-width: 900px; }
+            .roster-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .member-container {
+                max-width: 900px;
+            }
         }
 
         @media (max-width: 768px) {
-            .roster-grid { grid-template-columns: 1fr; }
-            nav.member-nav { padding: 15px 4%; }
-            #brand-name { font-size: 0.95rem; }
-            .home-title { letter-spacing: 8px; }
-            .top-nav-home { width: 85%; }
+            .roster-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav.member-nav {
+                padding: 15px 4%;
+            }
+
+            #brand-name {
+                font-size: 0.95rem;
+            }
+
+            .home-title {
+                letter-spacing: 8px;
+            }
+
+            .top-nav-home {
+                width: 85%;
+            }
+
             .vinyl-player-wrapper {
                 bottom: 20px;
                 right: 20px;
                 gap: 10px;
             }
+
             .vinyl-disc {
                 width: 65px;
                 height: 65px;
             }
+
             .vinyl-label {
                 width: 30px;
                 height: 30px;
             }
+
             .vinyl-info-box {
                 min-width: 175px;
                 max-width: 210px;
                 padding: 8px 10px;
             }
+
             .vinyl-slider {
                 width: 65px;
             }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Jumpscare Container -->
@@ -878,19 +1145,19 @@
         </div>
 
         <div class="home-container">
-            <h1 class="home-title">PEDSTYLE</h1> 
-            <div class="home-subtext">The Original Legacy Member</div>
+            <h1 class="home-title">PEDSTYLE</h1>
+            <div class="home-subtext">LASTNAME ALL PEDSTYLE</div>
 
             <div class="button-group">
                 <button onclick="navigateTo('members')" class="btn-enter-member">
                     <span class="btn-text-main">MEMBER ENTER</span>
-                    <span class="btn-text-sub">MEMBER 2K26</span>
+                    <span class="btn-text-sub">MEMBER PEDSTYLE</span>
                 </button>
             </div>
         </div>
 
         <footer class="home-footer">
-            &copy; 2K26 SYSTEM BY PEDSTYLE
+            &copy; WEBSITE PEDSTYLE BY INEEDYOUSHOP
         </footer>
     </div>
 
@@ -905,9 +1172,12 @@
                 PEDSTYLE 2K26
             </div>
             <div style="display: flex; gap: 10px;">
-                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
-                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
-                <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i> ADMIN</button>
+                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i>
+                    BACK</button>
+                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-home"></i>
+                    HOME</button>
+                <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i>
+                    ADMIN</button>
             </div>
         </nav>
 
@@ -921,27 +1191,33 @@
             <!-- Admin Management Panel -->
             <div id="adminPanel" class="hidden">
                 <div class="glass-panel">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="color: #fff; font-family: 'Orbitron'; font-size: 1.1rem;"><i class="fas fa-user-plus"></i> ADD / EDIT MEMBER</h3>
-                        <button onclick="logoutAdmin()" class="btn-action btn-secondary" style="font-size: 0.75rem;"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #fff; font-family: 'Orbitron'; font-size: 1.1rem;"><i
+                                class="fas fa-user-plus"></i> ADD / EDIT MEMBER</h3>
+                        <button onclick="logoutAdmin()" class="btn-action btn-secondary" style="font-size: 0.75rem;"><i
+                                class="fas fa-sign-out-alt"></i> LOGOUT</button>
                     </div>
 
                     <div class="admin-grid" style="margin-bottom: 20px;">
                         <input type="hidden" id="editMemberId">
-                        
+
                         <div class="input-group">
                             <label>ชื่อสมาชิก *</label>
-                            <input type="text" id="newName" placeholder="ใส่ชื่อสมาชิก..." onkeydown="if(event.key === 'Enter') saveMember()">
+                            <input type="text" id="newName" placeholder="ใส่ชื่อสมาชิก..."
+                                onkeydown="if(event.key === 'Enter') saveMember()">
                         </div>
 
                         <div class="input-group">
                             <label>ลิงก์ Facebook (URL) *</label>
-                            <input type="text" id="newFB" placeholder="https://facebook.com/..." onkeydown="if(event.key === 'Enter') saveMember()">
+                            <input type="text" id="newFB" placeholder="https://facebook.com/..."
+                                onkeydown="if(event.key === 'Enter') saveMember()">
                         </div>
 
                         <div class="input-group">
                             <label>ลิงก์รูปโปรไฟล์ (URL) - เว้นว่างได้</label>
-                            <input type="text" id="newImg" placeholder="https://.../photo.png" onkeydown="if(event.key === 'Enter') saveMember()">
+                            <input type="text" id="newImg" placeholder="https://.../photo.png"
+                                onkeydown="if(event.key === 'Enter') saveMember()">
                         </div>
 
                         <div class="input-group">
@@ -955,7 +1231,8 @@
                     </div>
 
                     <div style="display: flex; gap: 10px;">
-                        <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE DATA</button>
+                        <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE
+                            DATA</button>
                         <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
                     </div>
                 </div>
@@ -966,13 +1243,16 @@
                 <!-- FOUNDERS -->
                 <div id="section-founder" class="hidden">
                     <div class="section-header">
-                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
-                        <div class="section-title-badge" style="color: #f3d48b; text-shadow: 0 0 12px rgba(243, 212, 139, 0.4);">
+                        <span class="header-line"
+                            style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
+                        <div class="section-title-badge"
+                            style="color: #f3d48b; text-shadow: 0 0 12px rgba(243, 212, 139, 0.4);">
                             <i class="fa-solid fa-crown header-icon" style="color: #f3d48b;"></i>
                             <span id="titleFounder">FOUNDERS</span>
                             <span class="section-count" id="countFounder">[0]</span>
                         </div>
-                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
+                        <span class="header-line"
+                            style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
                     </div>
                     <div class="roster-grid" id="founderList"></div>
                 </div>
@@ -980,13 +1260,16 @@
                 <!-- LEADERS -->
                 <div id="section-leader" class="hidden">
                     <div class="section-header">
-                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
-                        <div class="section-title-badge" style="color: #ff4757; text-shadow: 0 0 12px rgba(255, 71, 87, 0.4);">
+                        <span class="header-line"
+                            style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                        <div class="section-title-badge"
+                            style="color: #ff4757; text-shadow: 0 0 12px rgba(255, 71, 87, 0.4);">
                             <i class="fa-solid fa-crown header-icon" style="color: #ff4757;"></i>
                             <span id="titleLeader">LEADERS</span>
                             <span class="section-count" id="countLeader">[0]</span>
                         </div>
-                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                        <span class="header-line"
+                            style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
                     </div>
                     <div class="roster-grid" id="leaderList"></div>
                 </div>
@@ -994,13 +1277,16 @@
                 <!-- MEMBERS -->
                 <div id="section-member" class="hidden">
                     <div class="section-header">
-                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
-                        <div class="section-title-badge" style="color: #e4e7eb; text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);">
+                        <span class="header-line"
+                            style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                        <div class="section-title-badge"
+                            style="color: #e4e7eb; text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);">
                             <i class="fa-solid fa-users header-icon" style="color: #e4e7eb;"></i>
                             <span id="titleMember">MEMBERS</span>
                             <span class="section-count" id="countMember">[0]</span>
                         </div>
-                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                        <span class="header-line"
+                            style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
                     </div>
                     <div class="roster-grid" id="memberList"></div>
                 </div>
@@ -1008,7 +1294,8 @@
                 <div id="emptyNotice" class="empty-placeholder hidden">
                     <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.35;"></i>
                     <p style="font-weight: 500;">ยังไม่มีรายชื่อสมาชิก</p>
-                    <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">(กดปุ่ม <b>ADMIN</b> ด้านบน ใส่รหัส <code>adminpedboys</code> เพื่อเริ่มเพิ่มสมาชิก)</p>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">(กดปุ่ม <b>ADMIN</b> ด้านบน ใส่รหัส
+                        <code>adminpedboys</code> เพื่อเริ่มเพิ่มสมาชิก)</p>
                 </div>
             </div>
         </div>
@@ -1018,7 +1305,8 @@
     <div id="loginModal" class="custom-modal">
         <div class="modal-box">
             <h3>ADMIN LOGIN</h3>
-            <input type="password" id="adminPassInput" placeholder="ENTER PASSWORD" onkeydown="if(event.key === 'Enter') handleAdminLogin()">
+            <input type="password" id="adminPassInput" placeholder="ENTER PASSWORD"
+                onkeydown="if(event.key === 'Enter') handleAdminLogin()">
             <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
                 <button onclick="handleAdminLogin()" class="btn-action">LOGIN</button>
                 <button onclick="closeModal('loginModal')" class="btn-action btn-secondary">CANCEL</button>
@@ -1030,9 +1318,11 @@
     <div id="confirmModal" class="custom-modal">
         <div class="modal-box">
             <h3 style="color: var(--danger);">DELETE MEMBER?</h3>
-            <p id="deleteMemberName" style="margin-bottom: 20px; font-family: 'Kanit'; color: rgba(255,255,255,0.7);"></p>
+            <p id="deleteMemberName" style="margin-bottom: 20px; font-family: 'Kanit'; color: rgba(255,255,255,0.7);">
+            </p>
             <div style="display: flex; gap: 10px; justify-content: center;">
-                <button id="confirmDeleteBtn" class="btn-action" style="background: var(--danger); color: #fff;">DELETE</button>
+                <button id="confirmDeleteBtn" class="btn-action"
+                    style="background: var(--danger); color: #fff;">DELETE</button>
                 <button onclick="closeModal('confirmModal')" class="btn-action btn-secondary">CANCEL</button>
             </div>
         </div>
@@ -1045,11 +1335,13 @@
         <div class="vinyl-info-box" id="vinylInfoBox">
             <div class="vinyl-song-title" id="music-title">The Weeknd, JENNIE - One Of The Girls</div>
             <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY/PAUSE</div>
-            
+
             <!-- 🔊 Volume Control (เพิ่มเสียง / ลดเสียง / ปิดเสียง) -->
             <div class="volume-control-row">
-                <i class="fas fa-volume-high vol-btn-icon" id="vol-icon" onclick="toggleMute(event)" title="Mute / Unmute"></i>
-                <input type="range" id="vol-slider" class="vinyl-slider" min="0" max="100" value="80" oninput="changeVolume(this.value)" title="Volume Slider">
+                <i class="fas fa-volume-high vol-btn-icon" id="vol-icon" onclick="toggleMute(event)"
+                    title="Mute / Unmute"></i>
+                <input type="range" id="vol-slider" class="vinyl-slider" min="0" max="100" value="80"
+                    oninput="changeVolume(this.value)" title="Volume Slider">
                 <span class="vol-percent" id="vol-text">80%</span>
             </div>
         </div>
@@ -1109,7 +1401,7 @@
         let currentRoster = {};
 
         function openAdminModal() {
-            if(isAdmin) {
+            if (isAdmin) {
                 document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
                 return;
             }
@@ -1122,7 +1414,7 @@
 
         function handleAdminLogin() {
             const pass = document.getElementById('adminPassInput').value;
-            if(pass === "adminpedboys") {
+            if (pass === "adminpedboys") {
                 isAdmin = true;
                 closeModal('loginModal');
                 document.getElementById('adminPanel').classList.remove('hidden');
@@ -1168,7 +1460,7 @@
                 localStorage.removeItem('pedstyle_clean_roster');
                 localStorage.removeItem('pedstyle_roster');
                 localStorage.removeItem('pedstyle_official_roster');
-            } catch(e) {}
+            } catch (e) { }
 
             db.ref('roster').on('value', snap => {
                 const data = snap.val();
@@ -1195,7 +1487,7 @@
 
             let totalCount = 0;
 
-            if(data && Object.keys(data).length > 0) {
+            if (data && Object.keys(data).length > 0) {
                 Object.keys(data).forEach(id => {
                     const item = data[id];
                     const role = item.role || 'member';
@@ -1235,7 +1527,7 @@
 
                             ${isAdmin ? `
                             <div class="admin-mini-controls">
-                                <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.fb||'').replace(/'/g, "\\'")}', '${(item.img||'').replace(/'/g, "\\'")}', '${role}')"><i class="fas fa-edit"></i> แก้ไข</button>
+                                <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.fb || '').replace(/'/g, "\\'")}', '${(item.img || '').replace(/'/g, "\\'")}', '${role}')"><i class="fas fa-edit"></i> แก้ไข</button>
                                 <button class="mini-btn" style="color: #ff6b81;" onclick="askDeleteMember('${id}', '${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> ลบ</button>
                             </div>` : ''}
                         </div>
@@ -1253,22 +1545,22 @@
             }
 
             Object.keys(countCounters).forEach(r => {
-                if(document.getElementById(counts[r])) {
+                if (document.getElementById(counts[r])) {
                     document.getElementById(counts[r]).innerText = `[${countCounters[r]}]`;
                 }
             });
         }
 
         function saveMember() {
-            if(!isAdmin) return;
+            if (!isAdmin) return;
             const id = document.getElementById('editMemberId').value;
             const nameVal = document.getElementById('newName').value.trim();
             const fbVal = document.getElementById('newFB').value.trim();
             const imgVal = document.getElementById('newImg').value.trim();
             const roleVal = document.getElementById('newRole').value;
 
-            if(!nameVal) return showToast("กรุณาใส่ชื่อสมาชิก");
-            if(!fbVal) return showToast("กรุณาใส่ลิงก์ Facebook");
+            if (!nameVal) return showToast("กรุณาใส่ชื่อสมาชิก");
+            if (!fbVal) return showToast("กรุณาใส่ลิงก์ Facebook");
 
             const data = {
                 name: nameVal,
@@ -1278,7 +1570,7 @@
             };
 
             const targetId = id || ('m_' + Date.now());
-            
+
             db.ref('roster/' + targetId).set(data).then(() => {
                 showToast(id ? "อัปเดตข้อมูลแบบ Realtime สำเร็จ!" : "เพิ่มสมาชิกแบบ Realtime สำเร็จ!");
                 resetForm();
@@ -1294,7 +1586,7 @@
         }
 
         function confirmDeleteMember() {
-            if(deleteTargetId) {
+            if (deleteTargetId) {
                 db.ref('roster/' + deleteTargetId).remove().then(() => {
                     showToast("ลบข้อมูลแบบ Realtime สำเร็จ!");
                     closeModal('confirmModal');
@@ -1340,12 +1632,12 @@
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
-                height: '0', 
+                height: '0',
                 width: '0',
                 videoId: videoId,
-                playerVars: { 
-                    'autoplay': 0, 
-                    'loop': 1, 
+                playerVars: {
+                    'autoplay': 0,
+                    'loop': 1,
                     'playlist': videoId,
                     'controls': 0,
                     'showinfo': 0,
@@ -1364,7 +1656,7 @@
             document.body.classList.add('loaded');
             const overlay = document.getElementById('overlay');
             overlay.classList.add('fade-out');
-            
+
             if (player && typeof player.playVideo === 'function') {
                 player.unMute();
                 player.setVolume(80);
@@ -1385,7 +1677,7 @@
                 } else {
                     document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
                 }
-            } catch(e) {
+            } catch (e) {
                 document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
             }
         }
@@ -1394,7 +1686,7 @@
             const icon = document.getElementById('play-icon');
             const cont = document.getElementById('player-container');
             const status = document.getElementById('music-status');
-            
+
             // 1 = Playing, 2 = Paused
             if (event.data == YT.PlayerState.PLAYING) {
                 icon.className = 'fas fa-pause vinyl-action-icon';
@@ -1436,7 +1728,7 @@
         function toggleMute(e) {
             if (e) e.stopPropagation();
             if (!player) return;
-            
+
             if (isMuted) {
                 player.unMute();
                 isMuted = false;
@@ -1463,7 +1755,7 @@
         }
 
         // ปุ่มคลิกที่แผ่นเสียง Play / Pause
-        document.getElementById('master-play').addEventListener('click', function(e) {
+        document.getElementById('master-play').addEventListener('click', function (e) {
             // บนมือถือ ให้เปิด/ปิดกล่องปรับเสียงได้ด้วย
             const infoBox = document.getElementById('vinylInfoBox');
             if (window.innerWidth <= 768 && infoBox) {
@@ -1483,4 +1775,5 @@
         document.addEventListener('contextmenu', event => event.preventDefault());
     </script>
 </body>
+
 </html>
