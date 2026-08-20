@@ -625,12 +625,20 @@
 
         // Realtime Listener from Firebase (Updates automatically on all devices worldwide in real-time)
         function initRealtimeRoster() {
+            // Purge any old local storage cache
+            try {
+                localStorage.removeItem('pedstyle_clean_roster');
+                localStorage.removeItem('pedstyle_roster');
+                localStorage.removeItem('pedstyle_official_roster');
+            } catch(e) {}
+
             db.ref('roster').on('value', snap => {
                 const data = snap.val();
                 currentRoster = data || {};
                 displayRosterData(currentRoster);
             }, err => {
                 console.log("Firebase error:", err);
+                displayRosterData({});
             });
         }
 
