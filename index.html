@@ -7,37 +7,59 @@
     
     <link rel="icon" type="image/png" href="logo.png">
     
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Firebase Realtime Database SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <style>
         :root {
             --primary-glow: rgba(255, 255, 255, 0.15);
             --accent-color: #ffffff;
             --glass-bg: rgba(255, 255, 255, 0.03);
             --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-dark: #08080a;
+            --card-bg: rgba(20, 20, 24, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --danger: #ff4757;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: default;
         }
 
         body {
             background-color: #000;
             color: #ffffff;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Kanit', 'Rajdhani', 'Inter', sans-serif;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden; 
+            overflow-x: hidden;
             position: relative;
         }
 
-        /* --- Overlay --- */
+        /* --- Background & Effects --- */
+        .bg-wrapper {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at center, #14141c 0%, #050508 100%);
+            background-attachment: fixed;
+        }
+
+        .vignette {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- Overlay (Click To Enter) --- */
         #overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -48,9 +70,8 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            transition: opacity 1.2s cubic-bezier(0.7, 0, 0.3, 1), visibility 1.2s;
+            transition: opacity 1s cubic-bezier(0.7, 0, 0.3, 1), visibility 1s;
         }
-        
         #overlay.fade-out { 
             opacity: 0; 
             visibility: hidden;
@@ -79,6 +100,7 @@
         }
 
         .main-enter-text {
+            font-family: 'Orbitron', sans-serif;
             font-size: 1.2rem;
             letter-spacing: 12px; 
             color: #ffffff;
@@ -87,30 +109,39 @@
         }
 
         .sub-enter-text {
+            font-family: 'Orbitron', sans-serif;
             font-size: 0.6rem;
             letter-spacing: 5px;
             color: rgba(255, 255, 255, 0.5);
             font-weight: 300;
         }
 
-        /* --- Background --- */
-        .bg-wrapper {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #14141c 0%, #050508 100%);
+        /* --- SPA Views --- */
+        .spa-view {
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
         }
-        body.loaded .bg-wrapper { transform: scale(1); }
-
-        .vignette {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.8) 100%);
-            z-index: -1;
+        .spa-view.hidden-view {
+            display: none !important;
+            opacity: 0;
+            transform: translateY(10px);
         }
 
-        /* --- Nav --- */
-        .top-nav {
+        /* ================================================= */
+        /* --- VIEW 1: HOME LANDING SCREEN --- */
+        /* ================================================= */
+        #view-home {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .top-nav-home {
             position: fixed;
             top: 25px;
             width: 90%;
@@ -124,13 +155,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 1s ease 0.5s;
+            z-index: 100;
         }
-        body.loaded .top-nav { opacity: 1; transform: translateY(0); }
-
         .nav-logo {
             display: flex;
             align-items: center;
@@ -145,22 +171,16 @@
         .nav-logo img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
         .nav-text { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
 
-        /* --- Content --- */
-        .container {
+        .home-container {
             text-align: center;
-            z-index: 10;
             width: 100%;
             padding: 0 30px;
-            margin-top: -50px;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 1s ease 0.8s;
+            margin-top: -30px;
         }
-        body.loaded .container { opacity: 1; transform: translateY(0); }
 
-        h1 {
+        .home-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2rem, 8vw, 4.5rem);
+            font-size: clamp(2.4rem, 8vw, 4.5rem);
             font-weight: 700;
             letter-spacing: 15px;
             margin-bottom: 10px;
@@ -171,16 +191,16 @@
             filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
         }
 
-        .subtext {
+        .home-subtext {
             font-family: 'Orbitron', sans-serif;
             font-size: 0.65rem;
             letter-spacing: 5px;
             color: rgba(255,255,255,0.4);
-            margin-bottom: 50px;
+            margin-bottom: 45px;
             text-transform: uppercase;
         }
 
-        .btn {
+        .btn-enter-member {
             position: relative;
             display: inline-flex;
             flex-direction: column;
@@ -198,16 +218,385 @@
             backdrop-filter: blur(10px);
             cursor: pointer;
         }
-        .btn:hover {
+        .btn-enter-member:hover {
             background: rgba(255,255,255,0.1);
             border-color: rgba(255,255,255,0.4);
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.5);
         }
-        .btn-text-main { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: #fff; pointer-events: none; }
-        .btn-text-sub { font-size: 0.5rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); margin-top: 5px; pointer-events: none; }
+        .btn-text-main { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: #fff; }
+        .btn-text-sub { font-size: 0.5rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); margin-top: 5px; }
 
-        /* --- Floating Vinyl Music Player (Right Side) --- */
+        .home-footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 3px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* ================================================= */
+        /* --- VIEW 2: MEMBERS ROSTER SCREEN --- */
+        /* ================================================= */
+        #view-members {
+            min-height: 100vh;
+        }
+
+        nav.member-nav { 
+            display: flex; justify-content: space-between; padding: 18px 6%; 
+            background: rgba(10, 10, 14, 0.85); align-items: center; position: sticky; 
+            top: 0; z-index: 100; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        #brand-name { 
+            font-weight: 900; letter-spacing: 3px; font-family: 'Orbitron'; font-size: 1.15rem; color: #fff;
+            display: flex; align-items: center; gap: 12px;
+        }
+        #brand-name img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
+
+        .member-container { max-width: 960px; margin: 0 auto; padding: 35px 20px 100px; }
+
+        .page-hero-header {
+            text-align: center;
+            margin: 25px 0 45px;
+        }
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.4rem, 7vw, 4.2rem);
+            font-weight: 700;
+            letter-spacing: 14px;
+            margin-bottom: 10px;
+            background: linear-gradient(180deg, #ffffff 0%, #777777 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(255,255,255,0.25));
+        }
+        .hero-subtext {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 6px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+        }
+
+        /* --- Admin Panel --- */
+        .glass-panel {
+            background: rgba(16, 16, 22, 0.85); border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px; padding: 25px; margin-bottom: 35px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+        .input-group { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+        .input-group label { font-size: 0.82rem; color: rgba(255, 255, 255, 0.7); font-family: 'Kanit'; }
+
+        input, select { 
+            background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-color); padding: 12px 14px; 
+            color: #fff; border-radius: 10px; font-family: 'Kanit'; outline: none; width: 100%;
+            transition: border 0.3s; font-size: 0.9rem;
+        }
+        input:focus, select:focus { border-color: rgba(255, 255, 255, 0.4); }
+
+        .btn-action { 
+            background: #ffffff; color: #000; border: none; padding: 10px 22px; 
+            border-radius: 10px; font-weight: 700; font-family: 'Orbitron'; cursor: pointer; 
+            transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+            justify-content: center; width: auto; font-size: 0.8rem; letter-spacing: 1px;
+        }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+
+        /* --- Section Header with Lines --- */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 45px 0 25px;
+        }
+        .header-line {
+            flex: 1;
+            height: 1px;
+        }
+        .section-title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+        .header-icon {
+            font-size: 0.95rem;
+        }
+        .section-count {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.45);
+            font-weight: 400;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* --- Cards Grid --- */
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 16px;
+        }
+
+        /* --- Member Card Base Styling --- */
+        .member-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .card-main {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+        .card-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #111;
+        }
+        .status-dot {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 9px;
+            height: 9px;
+            border: 2px solid #141418;
+            border-radius: 50%;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+        }
+        .card-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-role-badge {
+            display: inline-block;
+            align-self: flex-start;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        /* FOUNDERS (Gold) */
+        .card-role-founder {
+            border: 1.5px solid rgba(243, 212, 139, 0.55);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(243, 212, 139, 0.15);
+        }
+        .card-role-founder:hover {
+            border-color: #f3d48b;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(243, 212, 139, 0.35);
+        }
+        .card-role-founder .card-role-badge {
+            color: #f3d48b;
+            border: 1px solid rgba(243, 212, 139, 0.5);
+            background: rgba(243, 212, 139, 0.1);
+            box-shadow: 0 0 10px rgba(243, 212, 139, 0.2);
+        }
+        .card-role-founder .role-crown {
+            color: #f3d48b;
+            filter: drop-shadow(0 0 8px rgba(243, 212, 139, 0.8));
+        }
+        .card-role-founder .status-dot {
+            background: #f3d48b;
+            box-shadow: 0 0 8px rgba(243, 212, 139, 0.9);
+        }
+
+        /* LEADERS (Red) */
+        .card-role-leader {
+            border: 1.5px solid rgba(255, 71, 87, 0.55);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 71, 87, 0.15);
+        }
+        .card-role-leader:hover {
+            border-color: #ff4757;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 71, 87, 0.35);
+        }
+        .card-role-leader .card-role-badge {
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.5);
+            background: rgba(255, 71, 87, 0.1);
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
+        }
+        .card-role-leader .role-crown {
+            color: #ff4757;
+            filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.8));
+        }
+        .card-role-leader .status-dot {
+            background: #ff4757;
+            box-shadow: 0 0 8px rgba(255, 71, 87, 0.9);
+        }
+
+        /* MEMBERS (Silver) */
+        .card-role-member {
+            border: 1.5px solid rgba(220, 225, 240, 0.45);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+        .card-role-member:hover {
+            border-color: #ffffff;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+        .card-role-member .card-role-badge {
+            color: #e4e7eb;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        .card-role-member .role-crown {
+            color: #dcdde1;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+        }
+        .card-role-member .status-dot {
+            background: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+        }
+
+        .card-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 54px;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+        .role-crown {
+            font-size: 0.85rem;
+        }
+
+        .social-btns {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .card-social-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        .card-social-btn:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+        }
+
+        .admin-mini-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            justify-content: flex-end;
+            width: 100%;
+        }
+        .mini-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.3s;
+        }
+        .mini-btn:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+        .toast { 
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
+            background: #fff; color: #000; padding: 12px 35px; 
+            border-radius: 50px; font-weight: 900; z-index: 10001; font-size: 0.85rem;
+            font-family: 'Kanit', 'Orbitron'; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .empty-placeholder {
+            text-align: center;
+            padding: 80px 20px;
+            color: rgba(255, 255, 255, 0.35);
+            font-family: 'Kanit';
+            font-size: 0.95rem;
+        }
+
+        /* --- Custom Modals --- */
+        .custom-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: none; justify-content: center; align-items: center; z-index: 9999;
+        }
+        .modal-box {
+            background: #111116; border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 30px; border-radius: 20px; width: 90%; max-width: 440px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+        .modal-box h3 { font-family: 'Orbitron'; margin-bottom: 20px; color: #fff; letter-spacing: 2px; font-size: 1.1rem; }
+
+        #video-jumpscare {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 10000; display: none; pointer-events: none;
+        }
+        #video-jumpscare iframe { width: 100%; height: 100%; border: none; }
+
+        /* ================================================= */
+        /* --- 💿 FLOATING VINYL MUSIC PLAYER (BOTTOM-RIGHT) --- */
+        /* ================================================= */
         .vinyl-player-wrapper {
             position: fixed;
             bottom: 35px;
@@ -216,13 +605,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            opacity: 0;
-            transform: translateX(30px);
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.8s;
-        }
-        body.loaded .vinyl-player-wrapper {
-            opacity: 1;
-            transform: translateX(0);
+            transition: all 0.5s ease;
         }
 
         .vinyl-info-box {
@@ -249,7 +632,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Kanit', sans-serif;
             font-weight: 500;
         }
         .vinyl-status {
@@ -355,19 +738,14 @@
             opacity: 1;
         }
 
-        footer {
-            margin-top: 40px;
-            font-size: 0.55rem;
-            color: rgba(255,255,255,0.2);
-            letter-spacing: 3px;
-            font-family: 'Orbitron', sans-serif;
-        }
-
         #youtube-player { position: absolute; top: -1000px; left: -1000px; visibility: hidden; }
 
-        @media (max-width: 480px) {
-            h1 { letter-spacing: 8px; }
-            .top-nav { width: 85%; }
+        @media (max-width: 768px) {
+            .roster-grid { grid-template-columns: 1fr; }
+            nav.member-nav { padding: 15px 4%; }
+            #brand-name { font-size: 0.95rem; }
+            .home-title { letter-spacing: 8px; }
+            .top-nav-home { width: 85%; }
             .vinyl-player-wrapper {
                 bottom: 20px;
                 right: 20px;
@@ -388,7 +766,10 @@
 </head>
 <body>
 
-    <!-- Overlay Click to enter -->
+    <!-- Jumpscare Container -->
+    <div id="video-jumpscare"></div>
+
+    <!-- Overlay Click To Enter (Starts song fresh at 00:00) -->
     <div id="overlay" onclick="startWebsite()">
         <div class="enter-text-wrapper">
             <i class="fa-solid fa-fingerprint fingerprint-icon"></i>
@@ -401,33 +782,182 @@
     <div class="bg-wrapper"></div>
     <div class="vignette"></div>
 
-    <!-- Top Navigation -->
-    <div class="top-nav">
-        <a href="#" class="nav-logo">
-            <img src="logo.png" alt="icon">
-            PEDSTYLE
-        </a>
-        <div class="nav-text">V.2026.1</div>
-    </div>
-
-    <!-- Main Container -->
-    <div class="container">
-        <h1>PEDSTYLE</h1> 
-        <div class="subtext">The Original Legacy Member</div>
-
-        <div class="button-group">
-            <a href="member.html" class="btn">
-                <span class="btn-text-main">MEMBER ENTER</span>
-                <span class="btn-text-sub">MEMBER 2K26</span>
+    <!-- ========================================== -->
+    <!-- 🏠 VIEW 1: HOME LANDING SCREEN             -->
+    <!-- ========================================== -->
+    <div id="view-home" class="spa-view">
+        <div class="top-nav-home">
+            <a href="#" class="nav-logo">
+                <img src="logo.png" alt="icon">
+                PEDSTYLE
             </a>
+            <div class="nav-text">V.2026.1</div>
         </div>
 
-        <footer>
+        <div class="home-container">
+            <h1 class="home-title">PEDSTYLE</h1> 
+            <div class="home-subtext">The Original Legacy Member</div>
+
+            <div class="button-group">
+                <button onclick="navigateTo('members')" class="btn-enter-member">
+                    <span class="btn-text-main">MEMBER ENTER</span>
+                    <span class="btn-text-sub">MEMBER 2K26</span>
+                </button>
+            </div>
+        </div>
+
+        <footer class="home-footer">
             &copy; 2K26 SYSTEM BY PEDSTYLE
         </footer>
     </div>
 
-    <!-- Vinyl Music Player (Right Side) -->
+    <!-- ========================================== -->
+    <!-- 👥 VIEW 2: MEMBERS ROSTER SCREEN           -->
+    <!-- ========================================== -->
+    <div id="view-members" class="spa-view hidden-view">
+        <!-- Top Navigation -->
+        <nav class="member-nav">
+            <div id="brand-name">
+                <img src="logo.png" alt="logo">
+                PEDSTYLE 2K26
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
+                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
+                <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i> ADMIN</button>
+            </div>
+        </nav>
+
+        <div class="member-container">
+            <!-- Hero Header Title -->
+            <div class="page-hero-header">
+                <h1 class="hero-title">PEDSTYLE</h1>
+                <div class="hero-subtext">THE OFFICIAL MEMBERS ROSTER</div>
+            </div>
+
+            <!-- Admin Management Panel -->
+            <div id="adminPanel" class="hidden">
+                <div class="glass-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #fff; font-family: 'Orbitron'; font-size: 1.1rem;"><i class="fas fa-user-plus"></i> ADD / EDIT MEMBER</h3>
+                        <button onclick="logoutAdmin()" class="btn-action btn-secondary" style="font-size: 0.75rem;"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
+                    </div>
+
+                    <div class="admin-grid" style="margin-bottom: 20px;">
+                        <input type="hidden" id="editMemberId">
+                        
+                        <div class="input-group">
+                            <label>ชื่อสมาชิก *</label>
+                            <input type="text" id="newName" placeholder="ใส่ชื่อสมาชิก..." onkeydown="if(event.key === 'Enter') saveMember()">
+                        </div>
+
+                        <div class="input-group">
+                            <label>ลิงก์ Facebook (URL) *</label>
+                            <input type="text" id="newFB" placeholder="https://facebook.com/..." onkeydown="if(event.key === 'Enter') saveMember()">
+                        </div>
+
+                        <div class="input-group">
+                            <label>ลิงก์รูปโปรไฟล์ (URL) - เว้นว่างได้</label>
+                            <input type="text" id="newImg" placeholder="https://.../photo.png" onkeydown="if(event.key === 'Enter') saveMember()">
+                        </div>
+
+                        <div class="input-group">
+                            <label>ตำแหน่ง (Role) *</label>
+                            <select id="newRole">
+                                <option value="leader">Leader (กรอบแดง)</option>
+                                <option value="founder">Founder (กรอบทอง)</option>
+                                <option value="member">Member (กรอบเทาแสง)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE DATA</button>
+                        <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roster Display Sections -->
+            <div id="rosterDisplay">
+                <!-- FOUNDERS -->
+                <div id="section-founder" class="hidden">
+                    <div class="section-header">
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
+                        <div class="section-title-badge" style="color: #f3d48b; text-shadow: 0 0 12px rgba(243, 212, 139, 0.4);">
+                            <i class="fa-solid fa-crown header-icon" style="color: #f3d48b;"></i>
+                            <span id="titleFounder">FOUNDERS</span>
+                            <span class="section-count" id="countFounder">[0]</span>
+                        </div>
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
+                    </div>
+                    <div class="roster-grid" id="founderList"></div>
+                </div>
+
+                <!-- LEADERS -->
+                <div id="section-leader" class="hidden">
+                    <div class="section-header">
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                        <div class="section-title-badge" style="color: #ff4757; text-shadow: 0 0 12px rgba(255, 71, 87, 0.4);">
+                            <i class="fa-solid fa-crown header-icon" style="color: #ff4757;"></i>
+                            <span id="titleLeader">LEADERS</span>
+                            <span class="section-count" id="countLeader">[0]</span>
+                        </div>
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                    </div>
+                    <div class="roster-grid" id="leaderList"></div>
+                </div>
+
+                <!-- MEMBERS -->
+                <div id="section-member" class="hidden">
+                    <div class="section-header">
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                        <div class="section-title-badge" style="color: #e4e7eb; text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);">
+                            <i class="fa-solid fa-users header-icon" style="color: #e4e7eb;"></i>
+                            <span id="titleMember">MEMBERS</span>
+                            <span class="section-count" id="countMember">[0]</span>
+                        </div>
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                    </div>
+                    <div class="roster-grid" id="memberList"></div>
+                </div>
+
+                <div id="emptyNotice" class="empty-placeholder hidden">
+                    <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.35;"></i>
+                    <p style="font-weight: 500;">ยังไม่มีรายชื่อสมาชิก</p>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">(กดปุ่ม <b>ADMIN</b> ด้านบน ใส่รหัส <code>adminpedboys</code> เพื่อเริ่มเพิ่มสมาชิก)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="loginModal" class="custom-modal">
+        <div class="modal-box">
+            <h3>ADMIN LOGIN</h3>
+            <input type="password" id="adminPassInput" placeholder="ENTER PASSWORD" onkeydown="if(event.key === 'Enter') handleAdminLogin()">
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                <button onclick="handleAdminLogin()" class="btn-action">LOGIN</button>
+                <button onclick="closeModal('loginModal')" class="btn-action btn-secondary">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirmModal" class="custom-modal">
+        <div class="modal-box">
+            <h3 style="color: var(--danger);">DELETE MEMBER?</h3>
+            <p id="deleteMemberName" style="margin-bottom: 20px; font-family: 'Kanit'; color: rgba(255,255,255,0.7);"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="confirmDeleteBtn" class="btn-action" style="background: var(--danger); color: #fff;">DELETE</button>
+                <button onclick="closeModal('confirmModal')" class="btn-action btn-secondary">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 💿 CONTINUOUS PERSISTENT VINYL PLAYER       -->
+    <!-- ========================================== -->
     <div class="vinyl-player-wrapper" id="player-container">
         <div class="vinyl-info-box">
             <div class="vinyl-song-title" id="music-title">The Weeknd, JENNIE - One Of The Girls</div>
@@ -448,7 +978,268 @@
     <div id="youtube-player"></div>
 
     <script>
-        // โหลด YouTube IFrame API
+        // -------------------------------------------------------------
+        // 🌟 SEAMLESS SPA PAGE NAVIGATION (MUSIC NEVER STOPS/RELOADS)
+        // -------------------------------------------------------------
+        function navigateTo(targetView) {
+            const homeView = document.getElementById('view-home');
+            const membersView = document.getElementById('view-members');
+
+            if (targetView === 'members') {
+                homeView.classList.add('hidden-view');
+                membersView.classList.remove('hidden-view');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                history.replaceState(null, '', '#members');
+            } else {
+                membersView.classList.add('hidden-view');
+                homeView.classList.remove('hidden-view');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                history.replaceState(null, '', '#home');
+            }
+        }
+
+        // Check hash on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.location.hash === '#members') {
+                navigateTo('members');
+            }
+        });
+
+        // -------------------------------------------------------------
+        // 🌟 PEDSTYLE OFFICIAL FIREBASE REALTIME DATABASE CONFIGURATION
+        // -------------------------------------------------------------
+        const firebaseConfig = {
+            databaseURL: "https://pedstyle-21005-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let isAdmin = false;
+        let deleteTargetId = null;
+        let currentRoster = {};
+
+        function openAdminModal() {
+            if(isAdmin) {
+                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            document.getElementById('adminPassInput').value = "";
+            document.getElementById('loginModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function handleAdminLogin() {
+            const pass = document.getElementById('adminPassInput').value;
+            if(pass === "adminpedboys") {
+                isAdmin = true;
+                closeModal('loginModal');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('navAdmin').innerHTML = '<i class="fas fa-user-check"></i> ADMIN MODE';
+                showToast("LOGGED IN AS ADMIN");
+                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+                renderRoster();
+            } else {
+                closeModal('loginModal');
+                triggerJumpscare();
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('navAdmin').innerHTML = '<i class="fas fa-user-shield"></i> ADMIN';
+            showToast("LOGGED OUT");
+            renderRoster();
+        }
+
+        function triggerJumpscare() {
+            const container = document.getElementById('video-jumpscare');
+            container.innerHTML = `<iframe src="https://www.youtube.com/embed/u8UdAAX_n28?autoplay=1&controls=0&start=13&mute=0" allow="autoplay"></iframe>`;
+            container.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                container.style.display = 'none';
+                container.innerHTML = '';
+                document.body.style.overflow = 'auto';
+            }, 4000);
+        }
+
+        function showToast(m) {
+            const t = document.createElement('div'); t.className = 'toast fade-in';
+            t.innerText = m; document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        // Realtime Listener from Firebase
+        function initRealtimeRoster() {
+            try {
+                localStorage.removeItem('pedstyle_clean_roster');
+                localStorage.removeItem('pedstyle_roster');
+                localStorage.removeItem('pedstyle_official_roster');
+            } catch(e) {}
+
+            db.ref('roster').on('value', snap => {
+                const data = snap.val();
+                currentRoster = data || {};
+                displayRosterData(currentRoster);
+            }, err => {
+                console.log("Firebase error:", err);
+                displayRosterData({});
+            });
+        }
+
+        function renderRoster() {
+            displayRosterData(currentRoster);
+        }
+
+        function displayRosterData(data) {
+            const lists = { founder: 'founderList', leader: 'leaderList', member: 'memberList' };
+            const sections = { founder: 'section-founder', leader: 'section-leader', member: 'section-member' };
+            const counts = { founder: 'countFounder', leader: 'countLeader', member: 'countMember' };
+            const countCounters = { founder: 0, leader: 0, member: 0 };
+
+            Object.values(lists).forEach(id => document.getElementById(id).innerHTML = "");
+            Object.values(sections).forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            let totalCount = 0;
+
+            if(data && Object.keys(data).length > 0) {
+                Object.keys(data).forEach(id => {
+                    const item = data[id];
+                    const role = item.role || 'member';
+                    if (!lists[role]) return;
+
+                    totalCount++;
+                    countCounters[role]++;
+
+                    const displayImg = (item.img && item.img.trim() !== "") ? item.img : "logo.png";
+                    const card = document.createElement('div');
+                    card.className = `member-card card-role-${role} fade-in`;
+
+                    const fbHTML = item.fb ? `<a href="${item.fb}" target="_blank" class="card-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : '';
+                    const roleIcon = (role === 'member') ? 'fa-users' : 'fa-crown';
+
+                    card.innerHTML = `
+                        <div style="width: 100%;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="card-main">
+                                    <div class="avatar-wrap">
+                                        <img src="${displayImg}" alt="${item.name}" class="card-avatar" onerror="this.src='logo.png'">
+                                        <span class="status-dot"></span>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="card-name">${item.name}</div>
+                                        <div class="card-role-badge">${role.toUpperCase()}</div>
+                                    </div>
+                                </div>
+
+                                <div class="card-actions">
+                                    <i class="fa-solid ${roleIcon} role-crown"></i>
+                                    <div class="social-btns">
+                                        ${fbHTML}
+                                    </div>
+                                </div>
+                            </div>
+
+                            ${isAdmin ? `
+                            <div class="admin-mini-controls">
+                                <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.fb||'').replace(/'/g, "\\'")}', '${(item.img||'').replace(/'/g, "\\'")}', '${role}')"><i class="fas fa-edit"></i> แก้ไข</button>
+                                <button class="mini-btn" style="color: #ff6b81;" onclick="askDeleteMember('${id}', '${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> ลบ</button>
+                            </div>` : ''}
+                        </div>
+                    `;
+
+                    document.getElementById(lists[role]).appendChild(card);
+                    document.getElementById(sections[role]).classList.remove('hidden');
+                });
+            }
+
+            const emptyNotice = document.getElementById('emptyNotice');
+            if (emptyNotice) {
+                if (totalCount === 0) emptyNotice.classList.remove('hidden');
+                else emptyNotice.classList.add('hidden');
+            }
+
+            Object.keys(countCounters).forEach(r => {
+                if(document.getElementById(counts[r])) {
+                    document.getElementById(counts[r]).innerText = `[${countCounters[r]}]`;
+                }
+            });
+        }
+
+        function saveMember() {
+            if(!isAdmin) return;
+            const id = document.getElementById('editMemberId').value;
+            const nameVal = document.getElementById('newName').value.trim();
+            const fbVal = document.getElementById('newFB').value.trim();
+            const imgVal = document.getElementById('newImg').value.trim();
+            const roleVal = document.getElementById('newRole').value;
+
+            if(!nameVal) return showToast("กรุณาใส่ชื่อสมาชิก");
+            if(!fbVal) return showToast("กรุณาใส่ลิงก์ Facebook");
+
+            const data = {
+                name: nameVal,
+                fb: fbVal,
+                img: imgVal || "logo.png",
+                role: roleVal
+            };
+
+            const targetId = id || ('m_' + Date.now());
+            
+            db.ref('roster/' + targetId).set(data).then(() => {
+                showToast(id ? "อัปเดตข้อมูลแบบ Realtime สำเร็จ!" : "เพิ่มสมาชิกแบบ Realtime สำเร็จ!");
+                resetForm();
+            }).catch(e => {
+                showToast("บันทึกไม่สำเร็จ: " + e.message);
+            });
+        }
+
+        function askDeleteMember(id, name) {
+            deleteTargetId = id;
+            document.getElementById('deleteMemberName').innerText = `คุณต้องการลบ "${name}" ใช่หรือไม่?`;
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        function confirmDeleteMember() {
+            if(deleteTargetId) {
+                db.ref('roster/' + deleteTargetId).remove().then(() => {
+                    showToast("ลบข้อมูลแบบ Realtime สำเร็จ!");
+                    closeModal('confirmModal');
+                }).catch(e => {
+                    showToast("ลบไม่สำเร็จ: " + e.message);
+                });
+            }
+        }
+
+        document.getElementById('confirmDeleteBtn').onclick = confirmDeleteMember;
+
+        function prepareEdit(id, name, fb, img, role) {
+            document.getElementById('editMemberId').value = id;
+            document.getElementById('newName').value = name;
+            document.getElementById('newFB').value = (fb === '#') ? '' : fb;
+            document.getElementById('newImg').value = (img === 'logo.png') ? '' : (img || '');
+            document.getElementById('newRole').value = role;
+            document.getElementById('saveBtn').innerHTML = "<i class='fas fa-save'></i> UPDATE DATA";
+            document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('editMemberId').value = "";
+            document.getElementById('newName').value = "";
+            document.getElementById('newFB').value = "";
+            document.getElementById('newImg').value = "";
+            document.getElementById('saveBtn').innerHTML = "<i class='fas fa-check'></i> SAVE DATA";
+        }
+
+        // Initialize Realtime Sync
+        initRealtimeRoster();
+
+        // -------------------------------------------------------------
+        // 🎵 YOUTUBE MUSIC PLAYER & VINYL CONTROLS
+        // -------------------------------------------------------------
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -478,7 +1269,7 @@
             });
         }
 
-        // เริ่มเข้าสู่เว็บไซต์เมื่อคลิก Overlay (เริ่มใหม่จาก 00:00 เสมอ)
+        // 1. กดนิ้วโป้งเข้าเว็บมา ➡️ เริ่มเพลงใหม่ที่ 00:00
         function startWebsite() {
             document.body.classList.add('loaded');
             const overlay = document.getElementById('overlay');
@@ -527,7 +1318,7 @@
             }
         }
 
-        // ปุ่มควบคุม Play / Pause
+        // ปุ่มคลิกที่แผ่นเสียง Play / Pause
         document.getElementById('master-play').addEventListener('click', function() {
             if (!player || typeof player.getPlayerState !== 'function') return;
             const state = player.getPlayerState();
