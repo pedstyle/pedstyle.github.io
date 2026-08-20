@@ -1,1 +1,1 @@
-# pedstyle.github.io
+# pedstyle.ped.io
