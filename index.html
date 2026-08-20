@@ -206,17 +206,17 @@
         .btn-text-main { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: #fff; pointer-events: none; }
         .btn-text-sub { font-size: 0.5rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); margin-top: 5px; pointer-events: none; }
 
-        /* --- Floating Vinyl Music Player (Top Left) --- */
+        /* --- Floating Vinyl Music Player (Right Side) --- */
         .vinyl-player-wrapper {
             position: fixed;
-            top: 25px;
-            left: 30px;
+            bottom: 35px;
+            right: 35px;
             z-index: 1000;
             display: flex;
             align-items: center;
             gap: 15px;
             opacity: 0;
-            transform: translateX(-30px);
+            transform: translateX(30px);
             transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.8s;
         }
         body.loaded .vinyl-player-wrapper {
@@ -233,7 +233,7 @@
             padding: 8px 14px;
             max-width: 220px;
             opacity: 0;
-            transform: translateX(-10px);
+            transform: translateX(10px);
             transition: all 0.3s ease;
             pointer-events: none;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
@@ -368,16 +368,16 @@
             h1 { letter-spacing: 8px; }
             .top-nav { width: 85%; }
             .vinyl-player-wrapper {
-                top: 15px;
-                left: 15px;
+                bottom: 20px;
+                right: 20px;
             }
             .vinyl-disc {
-                width: 55px;
-                height: 55px;
+                width: 65px;
+                height: 65px;
             }
             .vinyl-label {
-                width: 26px;
-                height: 26px;
+                width: 30px;
+                height: 30px;
             }
             .vinyl-info-box {
                 display: none;
@@ -426,8 +426,13 @@
         </footer>
     </div>
 
-    <!-- Vinyl Music Player (Top Left) -->
+    <!-- Vinyl Music Player (Right Side) -->
     <div class="vinyl-player-wrapper" id="player-container">
+        <div class="vinyl-info-box">
+            <div class="vinyl-song-title" id="music-title">Initializing...</div>
+            <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY/PAUSE</div>
+        </div>
+
         <div class="vinyl-disc" id="master-play" title="Click to Play / Pause">
             <div class="vinyl-disc-inner">
                 <div class="vinyl-label">
@@ -436,11 +441,6 @@
                 <div class="vinyl-center-hole"></div>
             </div>
             <i class="fas fa-play vinyl-action-icon" id="play-icon"></i>
-        </div>
-
-        <div class="vinyl-info-box">
-            <div class="vinyl-song-title" id="music-title">Initializing...</div>
-            <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY/PAUSE</div>
         </div>
     </div>
 
