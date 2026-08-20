@@ -9,9 +9,6 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <style>
         :root {
@@ -144,7 +141,7 @@
             gap: 16px;
         }
 
-        /* --- Member Card Styling (Exact Match) --- */
+        /* --- Member Card Styling --- */
         .member-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
@@ -185,10 +182,9 @@
             width: 100%;
             height: 100%;
             border-radius: 14px;
-            object-fit: contain;
+            object-fit: cover;
             border: 1px solid rgba(255, 255, 255, 0.15);
-            background: rgba(0, 0, 0, 0.6);
-            padding: 6px;
+            background: #111;
         }
         .status-dot {
             position: absolute;
@@ -311,8 +307,8 @@
         /* Empty State */
         .empty-placeholder {
             text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.3);
+            padding: 80px 20px;
+            color: rgba(255, 255, 255, 0.35);
             font-family: 'Kanit';
             font-size: 0.95rem;
         }
@@ -379,12 +375,17 @@
                     
                     <div class="input-group">
                         <label>ชื่อสมาชิก *</label>
-                        <input type="text" id="newName" placeholder="เช่น Best Wellesley" onkeydown="if(event.key === 'Enter') saveMember()">
+                        <input type="text" id="newName" placeholder="ใส่ชื่อสมาชิก..." onkeydown="if(event.key === 'Enter') saveMember()">
                     </div>
 
                     <div class="input-group">
                         <label>ลิงก์ Facebook (URL) *</label>
                         <input type="text" id="newFB" placeholder="https://facebook.com/..." onkeydown="if(event.key === 'Enter') saveMember()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>ลิงก์รูปโปรไฟล์ (URL) - เว้นว่างได้</label>
+                        <input type="text" id="newImg" placeholder="https://.../photo.png" onkeydown="if(event.key === 'Enter') saveMember()">
                     </div>
 
                     <div class="input-group">
@@ -449,30 +450,22 @@
             </div>
 
             <div id="emptyNotice" class="empty-placeholder">
-                <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.4;"></i>
-                <p>ยังไม่มีรายชื่อสมาชิก</p>
-                <p style="font-size: 0.8rem; opacity: 0.5; margin-top: 5px;">(กดปุ่ม ADMIN เพื่อเข้าสู่ระบบและเริ่มเพิ่มสมาชิก)</p>
+                <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.35;"></i>
+                <p style="font-weight: 500;">ยังไม่มีรายชื่อสมาชิก</p>
+                <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">(กดปุ่ม <b>ADMIN</b> ด้านบน ใส่รหัส <code>adminpedboys</code> เพื่อเริ่มเพิ่มสมาชิก)</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Firebase Configuration (supports online database + local fallback)
-        let db = null;
-        try {
-            const firebaseConfig = {
-                databaseURL: "https://dernyoungsay-default-rtdb.asia-southeast1.firebasedatabase.app/"
-            };
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-        } catch(e) {
-            console.log("Firebase initialized locally");
-        }
-
         let isAdmin = false;
         let deleteTargetId = null;
 
-        // Clear previous sample names so it starts fresh
+        // Clean storage key specific to PEDSTYLE
+        const STORAGE_KEY = 'pedstyle_clean_roster';
+
+        // Clear any old external data
+        localStorage.removeItem('pedstyle_roster');
         localStorage.removeItem('pedstyle_roster_sample');
 
         function openAdminModal() {
@@ -529,24 +522,20 @@
             setTimeout(() => t.remove(), 3000);
         }
 
+        // Get Roster from LocalStorage (starts 100% empty)
+        function getRosterData() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : {};
+        }
+
+        function saveRosterData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
         // Render Member Cards
         function renderRoster() {
-            if (db) {
-                db.ref('roster').on('value', snap => {
-                    let data = snap.val();
-                    if(!data) {
-                        const localData = localStorage.getItem('pedstyle_roster');
-                        data = localData ? JSON.parse(localData) : {};
-                    }
-                    displayRosterData(data);
-                }, err => {
-                    const localData = localStorage.getItem('pedstyle_roster');
-                    displayRosterData(localData ? JSON.parse(localData) : {});
-                });
-            } else {
-                const localData = localStorage.getItem('pedstyle_roster');
-                displayRosterData(localData ? JSON.parse(localData) : {});
-            }
+            const data = getRosterData();
+            displayRosterData(data);
         }
 
         function displayRosterData(data) {
@@ -569,6 +558,7 @@
                     totalCount++;
                     countCounters[role]++;
 
+                    const displayImg = (item.img && item.img.trim() !== "") ? item.img : "logo.png";
                     const card = document.createElement('div');
                     card.className = 'member-card fade-in';
 
@@ -580,7 +570,7 @@
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <div class="card-main">
                                     <div class="avatar-wrap">
-                                        <img src="logo.png" alt="PEDSTYLE" class="card-avatar">
+                                        <img src="${displayImg}" alt="${item.name}" class="card-avatar" onerror="this.src='logo.png'">
                                         <span class="status-dot"></span>
                                     </div>
                                     <div class="card-info">
@@ -599,7 +589,7 @@
 
                             ${isAdmin ? `
                             <div class="admin-mini-controls">
-                                <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.fb||'').replace(/'/g, "\\'")}', '${role}')"><i class="fas fa-edit"></i> แก้ไข</button>
+                                <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.fb||'').replace(/'/g, "\\'")}', '${(item.img||'').replace(/'/g, "\\'")}', '${role}')"><i class="fas fa-edit"></i> แก้ไข</button>
                                 <button class="mini-btn" style="color: #ff6b81;" onclick="askDeleteMember('${id}', '${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> ลบ</button>
                             </div>` : ''}
                         </div>
@@ -630,6 +620,7 @@
             const id = document.getElementById('editMemberId').value;
             const nameVal = document.getElementById('newName').value.trim();
             const fbVal = document.getElementById('newFB').value.trim();
+            const imgVal = document.getElementById('newImg').value.trim();
             const roleVal = document.getElementById('newRole').value;
 
             if(!nameVal) return showToast("กรุณาใส่ชื่อสมาชิก");
@@ -638,21 +629,14 @@
             const data = {
                 name: nameVal,
                 fb: fbVal,
+                img: imgVal || "logo.png",
                 role: roleVal
             };
 
-            // Save to Firebase
-            if (db) {
-                if(id) db.ref('roster/' + id).update(data);
-                else db.ref('roster').push(data);
-            }
-
-            // Also save locally as backup
-            let localData = localStorage.getItem('pedstyle_roster');
-            let rosterObj = localData ? JSON.parse(localData) : {};
-            const targetId = id || ('local_' + Date.now());
+            let rosterObj = getRosterData();
+            const targetId = id || ('m_' + Date.now());
             rosterObj[targetId] = data;
-            localStorage.setItem('pedstyle_roster', JSON.stringify(rosterObj));
+            saveRosterData(rosterObj);
 
             showToast(id ? "อัปเดตข้อมูลสำเร็จ" : "เพิ่มสมาชิกสำเร็จ");
             resetForm();
@@ -667,14 +651,9 @@
 
         document.getElementById('confirmDeleteBtn').onclick = () => {
             if(deleteTargetId) {
-                if(db) db.ref('roster/' + deleteTargetId).remove();
-                
-                let localData = localStorage.getItem('pedstyle_roster');
-                if(localData) {
-                    let rosterObj = JSON.parse(localData);
-                    delete rosterObj[deleteTargetId];
-                    localStorage.setItem('pedstyle_roster', JSON.stringify(rosterObj));
-                }
+                let rosterObj = getRosterData();
+                delete rosterObj[deleteTargetId];
+                saveRosterData(rosterObj);
                 
                 showToast("ลบข้อมูลเรียบร้อย");
                 closeModal('confirmModal');
@@ -682,10 +661,11 @@
             }
         };
 
-        function prepareEdit(id, name, fb, role) {
+        function prepareEdit(id, name, fb, img, role) {
             document.getElementById('editMemberId').value = id;
             document.getElementById('newName').value = name;
             document.getElementById('newFB').value = (fb === '#') ? '' : fb;
+            document.getElementById('newImg').value = (img === 'logo.png') ? '' : (img || '');
             document.getElementById('newRole').value = role;
             document.getElementById('saveBtn').innerHTML = "<i class='fas fa-save'></i> UPDATE DATA";
             document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
@@ -695,6 +675,7 @@
             document.getElementById('editMemberId').value = "";
             document.getElementById('newName').value = "";
             document.getElementById('newFB').value = "";
+            document.getElementById('newImg').value = "";
             document.getElementById('saveBtn').innerHTML = "<i class='fas fa-check'></i> SAVE DATA";
         }
 
