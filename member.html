@@ -69,6 +69,31 @@
 
         .container { max-width: 960px; margin: 0 auto; padding: 35px 20px 80px; }
 
+        /* --- Hero Title (Matching Homepage) --- */
+        .page-hero-header {
+            text-align: center;
+            margin: 25px 0 45px;
+        }
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.4rem, 7vw, 4.2rem);
+            font-weight: 700;
+            letter-spacing: 14px;
+            margin-bottom: 10px;
+            background: linear-gradient(180deg, #ffffff 0%, #777777 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(255,255,255,0.25));
+        }
+        .hero-subtext {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 6px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+        }
+
         /* --- Admin Panel --- */
         .glass-panel {
             background: rgba(16, 16, 22, 0.85); border: 1px solid rgba(255, 255, 255, 0.12);
@@ -229,6 +254,94 @@
             color: rgba(255, 255, 255, 0.8);
         }
 
+        /* --- Custom Role Border Colors & Glow --- */
+        /* FOUNDERS (Gold) */
+        .card-role-founder {
+            border: 1.5px solid rgba(243, 212, 139, 0.55);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(243, 212, 139, 0.15);
+        }
+        .card-role-founder:hover {
+            border-color: #f3d48b;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(243, 212, 139, 0.35);
+        }
+        .card-role-founder .card-role-badge {
+            color: #f3d48b;
+            border-color: rgba(243, 212, 139, 0.5);
+            background: rgba(243, 212, 139, 0.1);
+            box-shadow: 0 0 10px rgba(243, 212, 139, 0.2);
+        }
+        .card-role-founder .role-crown {
+            color: #f3d48b;
+            filter: drop-shadow(0 0 8px rgba(243, 212, 139, 0.8));
+        }
+        .card-role-founder .status-dot {
+            background: #f3d48b;
+            box-shadow: 0 0 8px rgba(243, 212, 139, 0.9);
+        }
+        .card-role-founder .card-social-btn:hover {
+            border-color: rgba(243, 212, 139, 0.6);
+            color: #f3d48b;
+            box-shadow: 0 0 12px rgba(243, 212, 139, 0.3);
+        }
+
+        /* LEADERS (Red) */
+        .card-role-leader {
+            border: 1.5px solid rgba(255, 71, 87, 0.55);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 71, 87, 0.15);
+        }
+        .card-role-leader:hover {
+            border-color: #ff4757;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 71, 87, 0.35);
+        }
+        .card-role-leader .card-role-badge {
+            color: #ff4757;
+            border-color: rgba(255, 71, 87, 0.5);
+            background: rgba(255, 71, 87, 0.1);
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
+        }
+        .card-role-leader .role-crown {
+            color: #ff4757;
+            filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.8));
+        }
+        .card-role-leader .status-dot {
+            background: #ff4757;
+            box-shadow: 0 0 8px rgba(255, 71, 87, 0.9);
+        }
+        .card-role-leader .card-social-btn:hover {
+            border-color: rgba(255, 71, 87, 0.6);
+            color: #ff4757;
+            box-shadow: 0 0 12px rgba(255, 71, 87, 0.3);
+        }
+
+        /* MEMBERS (Glowing Silver / Light Grey) */
+        .card-role-member {
+            border: 1.5px solid rgba(220, 225, 240, 0.45);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+        .card-role-member:hover {
+            border-color: #ffffff;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+        .card-role-member .card-role-badge {
+            color: #e4e7eb;
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        .card-role-member .role-crown {
+            color: #dcdde1;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+        }
+        .card-role-member .status-dot {
+            background: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+        }
+        .card-role-member .card-social-btn:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+        }
+
         .card-actions {
             display: flex;
             flex-direction: column;
@@ -371,6 +484,12 @@
     </nav>
 
     <div class="container">
+        <!-- Hero Header Title (Matching Homepage) -->
+        <div class="page-hero-header">
+            <h1 class="hero-title">PEDSTYLE</h1>
+            <div class="hero-subtext">THE OFFICIAL MEMBERS ROSTER</div>
+        </div>
+
         <!-- Admin Management Panel (Appears after Login) -->
         <div id="adminPanel" class="hidden">
             <div class="glass-panel">
@@ -424,13 +543,13 @@
             <!-- FOUNDERS -->
             <div id="section-founder" class="hidden">
                 <div class="section-header">
-                    <span class="header-line"></span>
-                    <div class="section-title-badge">
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
+                    <div class="section-title-badge" style="color: #f3d48b; text-shadow: 0 0 12px rgba(243, 212, 139, 0.4);">
                         <i class="fa-solid fa-crown header-icon" style="color: #f3d48b;"></i>
                         <span id="titleFounder">FOUNDERS</span>
                         <span class="section-count" id="countFounder">[0]</span>
                     </div>
-                    <span class="header-line"></span>
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
                 </div>
                 <div class="roster-grid" id="founderList"></div>
             </div>
@@ -438,13 +557,13 @@
             <!-- LEADERS -->
             <div id="section-leader" class="hidden">
                 <div class="section-header">
-                    <span class="header-line"></span>
-                    <div class="section-title-badge">
-                        <i class="fa-solid fa-crown header-icon"></i>
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                    <div class="section-title-badge" style="color: #ff4757; text-shadow: 0 0 12px rgba(255, 71, 87, 0.4);">
+                        <i class="fa-solid fa-crown header-icon" style="color: #ff4757;"></i>
                         <span id="titleLeader">LEADERS</span>
                         <span class="section-count" id="countLeader">[0]</span>
                     </div>
-                    <span class="header-line"></span>
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
                 </div>
                 <div class="roster-grid" id="leaderList"></div>
             </div>
@@ -452,13 +571,13 @@
             <!-- MEMBERS -->
             <div id="section-member" class="hidden">
                 <div class="section-header">
-                    <span class="header-line"></span>
-                    <div class="section-title-badge">
-                        <i class="fa-solid fa-users header-icon"></i>
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                    <div class="section-title-badge" style="color: #e4e7eb; text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);">
+                        <i class="fa-solid fa-users header-icon" style="color: #e4e7eb;"></i>
                         <span id="titleMember">MEMBERS</span>
                         <span class="section-count" id="countMember">[0]</span>
                     </div>
-                    <span class="header-line"></span>
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
                 </div>
                 <div class="roster-grid" id="memberList"></div>
             </div>
@@ -610,10 +729,11 @@
 
                     const displayImg = (item.img && item.img.trim() !== "") ? item.img : "logo.png";
                     const card = document.createElement('div');
-                    card.className = 'member-card fade-in';
+                    card.className = `member-card card-role-${role} fade-in`;
 
                     // Facebook button
                     const fbHTML = item.fb ? `<a href="${item.fb}" target="_blank" class="card-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : '';
+                    const roleIcon = (role === 'member') ? 'fa-users' : 'fa-crown';
 
                     card.innerHTML = `
                         <div style="width: 100%;">
@@ -630,7 +750,7 @@
                                 </div>
 
                                 <div class="card-actions">
-                                    <i class="fa-solid fa-crown role-crown"></i>
+                                    <i class="fa-solid ${roleIcon} role-crown"></i>
                                     <div class="social-btns">
                                         ${fbHTML}
                                     </div>
