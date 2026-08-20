@@ -2,11 +2,1103 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=index.html#members">
-    <script>window.location.replace("index.html#members");</script>
-    <title>Redirecting to PEDSTYLE Members...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEDSTYLE - MEMBERS</title>
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Firebase Realtime Database SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --primary: #ffffff;
+            --accent: #f3d48b;
+            --bg-dark: #08080a;
+            --card-bg: rgba(20, 20, 24, 0.75);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --danger: #ff4757;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at center, #14141c 0%, #050508 100%);
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Kanit', 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- Custom Modals --- */
+        .custom-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            display: none; justify-content: center; align-items: center; z-index: 9999;
+        }
+        .modal-box {
+            background: #111116; border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 30px; border-radius: 20px; width: 90%; max-width: 440px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+        .modal-box h3 { font-family: 'Orbitron'; margin-bottom: 20px; color: #fff; letter-spacing: 2px; font-size: 1.1rem; }
+
+        #video-jumpscare {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 10000; display: none; pointer-events: none;
+        }
+        #video-jumpscare iframe { width: 100%; height: 100%; border: none; }
+
+        /* --- Navigation --- */
+        nav { 
+            display: flex; justify-content: space-between; padding: 18px 6%; 
+            background: rgba(10, 10, 14, 0.85); align-items: center; position: sticky; 
+            top: 0; z-index: 100; backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        #brand-name { 
+            font-weight: 900; letter-spacing: 3px; font-family: 'Orbitron'; font-size: 1.15rem; color: #fff;
+            display: flex; align-items: center; gap: 12px;
+        }
+        #brand-name img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 35px 20px 100px; }
+
+        /* --- Hero Title (Matching Homepage) --- */
+        .page-hero-header {
+            text-align: center;
+            margin: 25px 0 45px;
+        }
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.4rem, 7vw, 4.2rem);
+            font-weight: 700;
+            letter-spacing: 14px;
+            margin-bottom: 10px;
+            background: linear-gradient(180deg, #ffffff 0%, #777777 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 25px rgba(255,255,255,0.25));
+        }
+        .hero-subtext {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 6px;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+        }
+
+        /* --- Admin Panel --- */
+        .glass-panel {
+            background: rgba(16, 16, 22, 0.85); border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px; padding: 25px; margin-bottom: 35px;
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+
+        .input-group { display: flex; flex-direction: column; gap: 6px; text-align: left; }
+        .input-group label { font-size: 0.82rem; color: rgba(255, 255, 255, 0.7); font-family: 'Kanit'; }
+
+        input, select { 
+            background: rgba(0, 0, 0, 0.6); border: 1px solid var(--border-color); padding: 12px 14px; 
+            color: #fff; border-radius: 10px; font-family: 'Kanit'; outline: none; width: 100%;
+            transition: border 0.3s; font-size: 0.9rem;
+        }
+        input:focus, select:focus { border-color: rgba(255, 255, 255, 0.4); }
+
+        .btn-action { 
+            background: #ffffff; color: #000; border: none; padding: 10px 22px; 
+            border-radius: 10px; font-weight: 700; font-family: 'Orbitron'; cursor: pointer; 
+            transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+            justify-content: center; width: auto; font-size: 0.8rem; letter-spacing: 1px;
+        }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+
+        /* --- Section Header with Lines --- */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 45px 0 25px;
+        }
+        .header-line {
+            flex: 1;
+            height: 1px;
+        }
+        .section-title-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+        .header-icon {
+            font-size: 0.95rem;
+        }
+        .section-count {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.45);
+            font-weight: 400;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* --- Cards Grid (2 Columns) --- */
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 16px;
+        }
+
+        /* --- Member Card Base Styling --- */
+        .member-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .card-main {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 54px;
+            height: 54px;
+            flex-shrink: 0;
+            margin-right: 15px;
+        }
+        .card-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #111;
+        }
+        .status-dot {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 9px;
+            height: 9px;
+            border: 2px solid #141418;
+            border-radius: 50%;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+        }
+        .card-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-role-badge {
+            display: inline-block;
+            align-self: flex-start;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 3px 10px;
+            border-radius: 6px;
+        }
+
+        /* --- Custom Role Border Colors & Glow --- */
+        /* FOUNDERS (Gold) */
+        .card-role-founder {
+            border: 1.5px solid rgba(243, 212, 139, 0.55);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(243, 212, 139, 0.15);
+        }
+        .card-role-founder:hover {
+            border-color: #f3d48b;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(243, 212, 139, 0.35);
+        }
+        .card-role-founder .card-role-badge {
+            color: #f3d48b;
+            border: 1px solid rgba(243, 212, 139, 0.5);
+            background: rgba(243, 212, 139, 0.1);
+            box-shadow: 0 0 10px rgba(243, 212, 139, 0.2);
+        }
+        .card-role-founder .role-crown {
+            color: #f3d48b;
+            filter: drop-shadow(0 0 8px rgba(243, 212, 139, 0.8));
+        }
+        .card-role-founder .status-dot {
+            background: #f3d48b;
+            box-shadow: 0 0 8px rgba(243, 212, 139, 0.9);
+        }
+        .card-role-founder .card-social-btn:hover {
+            border-color: rgba(243, 212, 139, 0.6);
+            color: #f3d48b;
+            box-shadow: 0 0 12px rgba(243, 212, 139, 0.3);
+        }
+
+        /* LEADERS (Red) */
+        .card-role-leader {
+            border: 1.5px solid rgba(255, 71, 87, 0.55);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 71, 87, 0.15);
+        }
+        .card-role-leader:hover {
+            border-color: #ff4757;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 71, 87, 0.35);
+        }
+        .card-role-leader .card-role-badge {
+            color: #ff4757;
+            border: 1px solid rgba(255, 71, 87, 0.5);
+            background: rgba(255, 71, 87, 0.1);
+            box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
+        }
+        .card-role-leader .role-crown {
+            color: #ff4757;
+            filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.8));
+        }
+        .card-role-leader .status-dot {
+            background: #ff4757;
+            box-shadow: 0 0 8px rgba(255, 71, 87, 0.9);
+        }
+        .card-role-leader .card-social-btn:hover {
+            border-color: rgba(255, 71, 87, 0.6);
+            color: #ff4757;
+            box-shadow: 0 0 12px rgba(255, 71, 87, 0.3);
+        }
+
+        /* MEMBERS (Glowing Silver / Light Grey) */
+        .card-role-member {
+            border: 1.5px solid rgba(220, 225, 240, 0.45);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.15);
+        }
+        .card-role-member:hover {
+            border-color: #ffffff;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 255, 255, 0.4);
+        }
+        .card-role-member .card-role-badge {
+            color: #e4e7eb;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        .card-role-member .role-crown {
+            color: #dcdde1;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+        }
+        .card-role-member .status-dot {
+            background: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+        }
+        .card-role-member .card-social-btn:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            color: #ffffff;
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+        }
+
+        .card-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 54px;
+            margin-left: 15px;
+            flex-shrink: 0;
+        }
+        .role-crown {
+            font-size: 0.85rem;
+        }
+
+        .social-btns {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .card-social-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        /* Admin Mini Edit/Delete Controls */
+        .admin-mini-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            justify-content: flex-end;
+            width: 100%;
+        }
+        .mini-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.3s;
+        }
+        .mini-btn:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+        .toast { 
+            position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); 
+            background: #fff; color: #000; padding: 12px 35px; 
+            border-radius: 50px; font-weight: 900; z-index: 10001; font-size: 0.85rem;
+            font-family: 'Kanit', 'Orbitron'; box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Empty State */
+        .empty-placeholder {
+            text-align: center;
+            padding: 80px 20px;
+            color: rgba(255, 255, 255, 0.35);
+            font-family: 'Kanit';
+            font-size: 0.95rem;
+        }
+
+        /* --- Floating Vinyl Music Player (Bottom-Right) --- */
+        .vinyl-player-wrapper {
+            position: fixed;
+            bottom: 35px;
+            right: 35px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.5s ease;
+        }
+
+        .vinyl-info-box {
+            background: rgba(12, 12, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 14px;
+            max-width: 240px;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .vinyl-player-wrapper:hover .vinyl-info-box {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .vinyl-song-title {
+            font-size: 0.65rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 500;
+        }
+        .vinyl-status {
+            font-size: 0.5rem;
+            color: rgba(255,255,255,0.4);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        /* Vinyl Disc Record */
+        .vinyl-disc {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle, #080808 30%, #181818 32%, #080808 35%, #1c1c1c 38%, #080808 42%, #181818 46%, #080808 50%, #1c1c1c 55%, #080808 60%, #151515 65%, #080808 70%),
+                #111;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.05);
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            user-select: none;
+        }
+        .vinyl-disc:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.25);
+        }
+
+        /* Spinning Animation */
+        .vinyl-disc-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: rotateVinyl 6s linear infinite;
+            animation-play-state: paused;
+            position: relative;
+        }
+        .playing .vinyl-disc-inner {
+            animation-play-state: running;
+        }
+        .playing .vinyl-disc {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes rotateVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Center Album Art Label */
+        .vinyl-label {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 8px rgba(0,0,0,0.8);
+        }
+        .vinyl-label img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Center Spindle Hole */
+        .vinyl-center-hole {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border: 1.5px solid #fff;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        /* Play / Pause overlay icon on hover */
+        .vinyl-action-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 0.9rem;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            filter: drop-shadow(0 0 6px rgba(0,0,0,0.9));
+            pointer-events: none;
+        }
+        .vinyl-disc:hover .vinyl-action-icon {
+            opacity: 1;
+        }
+
+        #youtube-player { position: absolute; top: -1000px; left: -1000px; visibility: hidden; }
+
+        @media (max-width: 768px) {
+            .roster-grid { grid-template-columns: 1fr; }
+            nav { padding: 15px 4%; }
+            #brand-name { font-size: 0.95rem; }
+            .vinyl-player-wrapper {
+                bottom: 20px;
+                right: 20px;
+            }
+            .vinyl-disc {
+                width: 65px;
+                height: 65px;
+            }
+            .vinyl-label {
+                width: 30px;
+                height: 30px;
+            }
+            .vinyl-info-box {
+                display: none;
+            }
+        }
+    </style>
 </head>
-<body style="background: #000; color: #fff; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: sans-serif;">
-    <p>Loading PEDSTYLE Members...</p>
+<body>
+
+    <div id="video-jumpscare"></div>
+
+    <!-- Admin Login Modal -->
+    <div id="loginModal" class="custom-modal">
+        <div class="modal-box">
+            <h3>ADMIN LOGIN</h3>
+            <input type="password" id="adminPassInput" placeholder="ENTER PASSWORD" onkeydown="if(event.key === 'Enter') handleAdminLogin()">
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                <button onclick="handleAdminLogin()" class="btn-action">LOGIN</button>
+                <button onclick="closeModal('loginModal')" class="btn-action btn-secondary">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div id="confirmModal" class="custom-modal">
+        <div class="modal-box">
+            <h3 style="color: var(--danger);">DELETE MEMBER?</h3>
+            <p id="deleteMemberName" style="margin-bottom: 20px; font-family: 'Kanit'; color: rgba(255,255,255,0.7);"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="confirmDeleteBtn" class="btn-action" style="background: var(--danger); color: #fff;">DELETE</button>
+                <button onclick="closeModal('confirmModal')" class="btn-action btn-secondary">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navigation -->
+    <nav>
+        <div id="brand-name">
+            <img src="logo.png" alt="logo">
+            PEDSTYLE 2K26
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="window.location.href='index.html'" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
+            <button onclick="window.location.href='index.html'" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
+            <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i> ADMIN</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Header Title (Matching Homepage) -->
+        <div class="page-hero-header">
+            <h1 class="hero-title">PEDSTYLE</h1>
+            <div class="hero-subtext">THE OFFICIAL MEMBERS ROSTER</div>
+        </div>
+
+        <!-- Admin Management Panel (Appears after Login) -->
+        <div id="adminPanel" class="hidden">
+            <div class="glass-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="color: #fff; font-family: 'Orbitron'; font-size: 1.1rem;"><i class="fas fa-user-plus"></i> ADD / EDIT MEMBER</h3>
+                    <button onclick="logoutAdmin()" class="btn-action btn-secondary" style="font-size: 0.75rem;"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
+                </div>
+
+                <div class="admin-grid" style="margin-bottom: 20px;">
+                    <input type="hidden" id="editMemberId">
+                    
+                    <div class="input-group">
+                        <label>ชื่อสมาชิก *</label>
+                        <input type="text" id="newName" placeholder="ใส่ชื่อสมาชิก..." onkeydown="if(event.key === 'Enter') saveMember()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>ลิงก์ Facebook (URL) *</label>
+                        <input type="text" id="newFB" placeholder="https://facebook.com/..." onkeydown="if(event.key === 'Enter') saveMember()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>ลิงก์รูปโปรไฟล์ (URL) - เว้นว่างได้</label>
+                        <input type="text" id="newImg" placeholder="https://.../photo.png" onkeydown="if(event.key === 'Enter') saveMember()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>ตำแหน่ง (Role) *</label>
+                        <select id="newRole">
+                            <option value="leader">Leader (กรอบแดง)</option>
+                            <option value="founder">Founder (กรอบทอง)</option>
+                            <option value="member">Member (กรอบเทาแสง)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE DATA</button>
+                    <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Roster Display Sections -->
+        <div id="rosterDisplay">
+            <!-- FOUNDERS -->
+            <div id="section-founder" class="hidden">
+                <div class="section-header">
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
+                    <div class="section-title-badge" style="color: #f3d48b; text-shadow: 0 0 12px rgba(243, 212, 139, 0.4);">
+                        <i class="fa-solid fa-crown header-icon" style="color: #f3d48b;"></i>
+                        <span id="titleFounder">FOUNDERS</span>
+                        <span class="section-count" id="countFounder">[0]</span>
+                    </div>
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
+                </div>
+                <div class="roster-grid" id="founderList"></div>
+            </div>
+
+            <!-- LEADERS -->
+            <div id="section-leader" class="hidden">
+                <div class="section-header">
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                    <div class="section-title-badge" style="color: #ff4757; text-shadow: 0 0 12px rgba(255, 71, 87, 0.4);">
+                        <i class="fa-solid fa-crown header-icon" style="color: #ff4757;"></i>
+                        <span id="titleLeader">LEADERS</span>
+                        <span class="section-count" id="countLeader">[0]</span>
+                    </div>
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                </div>
+                <div class="roster-grid" id="leaderList"></div>
+            </div>
+
+            <!-- MEMBERS -->
+            <div id="section-member" class="hidden">
+                <div class="section-header">
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                    <div class="section-title-badge" style="color: #e4e7eb; text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);">
+                        <i class="fa-solid fa-users header-icon" style="color: #e4e7eb;"></i>
+                        <span id="titleMember">MEMBERS</span>
+                        <span class="section-count" id="countMember">[0]</span>
+                    </div>
+                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                </div>
+                <div class="roster-grid" id="memberList"></div>
+            </div>
+
+            <div id="emptyNotice" class="empty-placeholder hidden">
+                <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.35;"></i>
+                <p style="font-weight: 500;">ยังไม่มีรายชื่อสมาชิก</p>
+                <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">(กดปุ่ม <b>ADMIN</b> ด้านบน ใส่รหัส <code>adminpedboys</code> เพื่อเริ่มเพิ่มสมาชิก)</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vinyl Music Player (Bottom-Right) -->
+    <div class="vinyl-player-wrapper" id="player-container">
+        <div class="vinyl-info-box">
+            <div class="vinyl-song-title" id="music-title">The Weeknd, JENNIE - One Of The Girls</div>
+            <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY/PAUSE</div>
+        </div>
+
+        <div class="vinyl-disc" id="master-play" title="Click to Play / Pause">
+            <div class="vinyl-disc-inner">
+                <div class="vinyl-label">
+                    <img src="https://img.youtube.com/vi/f1r0XZLNlGQ/hqdefault.jpg" alt="Cover" id="music-cover">
+                </div>
+                <div class="vinyl-center-hole"></div>
+            </div>
+            <i class="fas fa-play vinyl-action-icon" id="play-icon"></i>
+        </div>
+    </div>
+
+    <div id="youtube-player"></div>
+
+    <script>
+        // -------------------------------------------------------------
+        // 🌟 PEDSTYLE OFFICIAL FIREBASE REALTIME DATABASE CONFIGURATION
+        // -------------------------------------------------------------
+        const firebaseConfig = {
+            databaseURL: "https://pedstyle-21005-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let isAdmin = false;
+        let deleteTargetId = null;
+        let currentRoster = {};
+
+        function openAdminModal() {
+            if(isAdmin) {
+                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+            document.getElementById('adminPassInput').value = "";
+            document.getElementById('loginModal').style.display = 'flex';
+            setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
+        }
+
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function handleAdminLogin() {
+            const pass = document.getElementById('adminPassInput').value;
+            if(pass === "adminpedboys") {
+                isAdmin = true;
+                closeModal('loginModal');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('navAdmin').innerHTML = '<i class="fas fa-user-check"></i> ADMIN MODE';
+                showToast("LOGGED IN AS ADMIN");
+                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+                renderRoster();
+            } else {
+                closeModal('loginModal');
+                triggerJumpscare();
+            }
+        }
+
+        function logoutAdmin() {
+            isAdmin = false;
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('navAdmin').innerHTML = '<i class="fas fa-user-shield"></i> ADMIN';
+            showToast("LOGGED OUT");
+            renderRoster();
+        }
+
+        function triggerJumpscare() {
+            const container = document.getElementById('video-jumpscare');
+            container.innerHTML = `<iframe src="https://www.youtube.com/embed/u8UdAAX_n28?autoplay=1&controls=0&start=13&mute=0" allow="autoplay"></iframe>`;
+            container.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                container.style.display = 'none';
+                container.innerHTML = '';
+                document.body.style.overflow = 'auto';
+            }, 4000);
+        }
+
+        function showToast(m) {
+            const t = document.createElement('div'); t.className = 'toast fade-in';
+            t.innerText = m; document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        // Realtime Listener from Firebase
+        function initRealtimeRoster() {
+            try {
+                localStorage.removeItem('pedstyle_clean_roster');
+                localStorage.removeItem('pedstyle_roster');
+                localStorage.removeItem('pedstyle_official_roster');
+            } catch(e) {}
+
+            db.ref('roster').on('value', snap => {
+                const data = snap.val();
+                currentRoster = data || {};
+                displayRosterData(currentRoster);
+            }, err => {
+                console.log("Firebase error:", err);
+                displayRosterData({});
+            });
+        }
+
+        function renderRoster() {
+            displayRosterData(currentRoster);
+        }
+
+        function displayRosterData(data) {
+            const lists = { founder: 'founderList', leader: 'leaderList', member: 'memberList' };
+            const sections = { founder: 'section-founder', leader: 'section-leader', member: 'section-member' };
+            const counts = { founder: 'countFounder', leader: 'countLeader', member: 'countMember' };
+            const countCounters = { founder: 0, leader: 0, member: 0 };
+
+            Object.values(lists).forEach(id => document.getElementById(id).innerHTML = "");
+            Object.values(sections).forEach(id => document.getElementById(id).classList.add('hidden'));
+
+            let totalCount = 0;
+
+            if(data && Object.keys(data).length > 0) {
+                Object.keys(data).forEach(id => {
+                    const item = data[id];
+                    const role = item.role || 'member';
+                    if (!lists[role]) return;
+
+                    totalCount++;
+                    countCounters[role]++;
+
+                    const displayImg = (item.img && item.img.trim() !== "") ? item.img : "logo.png";
+                    const card = document.createElement('div');
+                    card.className = `member-card card-role-${role} fade-in`;
+
+                    // Facebook button
+                    const fbHTML = item.fb ? `<a href="${item.fb}" target="_blank" class="card-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : '';
+                    const roleIcon = (role === 'member') ? 'fa-users' : 'fa-crown';
+
+                    card.innerHTML = `
+                        <div style="width: 100%;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="card-main">
+                                    <div class="avatar-wrap">
+                                        <img src="${displayImg}" alt="${item.name}" class="card-avatar" onerror="this.src='logo.png'">
+                                        <span class="status-dot"></span>
+                                    </div>
+                                    <div class="card-info">
+                                        <div class="card-name">${item.name}</div>
+                                        <div class="card-role-badge">${role.toUpperCase()}</div>
+                                    </div>
+                                </div>
+
+                                <div class="card-actions">
+                                    <i class="fa-solid ${roleIcon} role-crown"></i>
+                                    <div class="social-btns">
+                                        ${fbHTML}
+                                    </div>
+                                </div>
+                            </div>
+
+                            ${isAdmin ? `
+                            <div class="admin-mini-controls">
+                                <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.fb||'').replace(/'/g, "\\'")}', '${(item.img||'').replace(/'/g, "\\'")}', '${role}')"><i class="fas fa-edit"></i> แก้ไข</button>
+                                <button class="mini-btn" style="color: #ff6b81;" onclick="askDeleteMember('${id}', '${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> ลบ</button>
+                            </div>` : ''}
+                        </div>
+                    `;
+
+                    document.getElementById(lists[role]).appendChild(card);
+                    document.getElementById(sections[role]).classList.remove('hidden');
+                });
+            }
+
+            // Empty state notice
+            const emptyNotice = document.getElementById('emptyNotice');
+            if (emptyNotice) {
+                if (totalCount === 0) emptyNotice.classList.remove('hidden');
+                else emptyNotice.classList.add('hidden');
+            }
+
+            // Update Counts in Section Headers
+            Object.keys(countCounters).forEach(r => {
+                if(document.getElementById(counts[r])) {
+                    document.getElementById(counts[r]).innerText = `[${countCounters[r]}]`;
+                }
+            });
+        }
+
+        function saveMember() {
+            if(!isAdmin) return;
+            const id = document.getElementById('editMemberId').value;
+            const nameVal = document.getElementById('newName').value.trim();
+            const fbVal = document.getElementById('newFB').value.trim();
+            const imgVal = document.getElementById('newImg').value.trim();
+            const roleVal = document.getElementById('newRole').value;
+
+            if(!nameVal) return showToast("กรุณาใส่ชื่อสมาชิก");
+            if(!fbVal) return showToast("กรุณาใส่ลิงก์ Facebook");
+
+            const data = {
+                name: nameVal,
+                fb: fbVal,
+                img: imgVal || "logo.png",
+                role: roleVal
+            };
+
+            const targetId = id || ('m_' + Date.now());
+            
+            // Save directly to Firebase Realtime Database
+            db.ref('roster/' + targetId).set(data).then(() => {
+                showToast(id ? "อัปเดตข้อมูลแบบ Realtime สำเร็จ!" : "เพิ่มสมาชิกแบบ Realtime สำเร็จ!");
+                resetForm();
+            }).catch(e => {
+                showToast("บันทึกไม่สำเร็จ: " + e.message);
+            });
+        }
+
+        function askDeleteMember(id, name) {
+            deleteTargetId = id;
+            document.getElementById('deleteMemberName').innerText = `คุณต้องการลบ "${name}" ใช่หรือไม่?`;
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        function confirmDeleteMember() {
+            if(deleteTargetId) {
+                db.ref('roster/' + deleteTargetId).remove().then(() => {
+                    showToast("ลบข้อมูลแบบ Realtime สำเร็จ!");
+                    closeModal('confirmModal');
+                }).catch(e => {
+                    showToast("ลบไม่สำเร็จ: " + e.message);
+                });
+            }
+        }
+
+        document.getElementById('confirmDeleteBtn').onclick = confirmDeleteMember;
+
+        function prepareEdit(id, name, fb, img, role) {
+            document.getElementById('editMemberId').value = id;
+            document.getElementById('newName').value = name;
+            document.getElementById('newFB').value = (fb === '#') ? '' : fb;
+            document.getElementById('newImg').value = (img === 'logo.png') ? '' : (img || '');
+            document.getElementById('newRole').value = role;
+            document.getElementById('saveBtn').innerHTML = "<i class='fas fa-save'></i> UPDATE DATA";
+            document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('editMemberId').value = "";
+            document.getElementById('newName').value = "";
+            document.getElementById('newFB').value = "";
+            document.getElementById('newImg').value = "";
+            document.getElementById('saveBtn').innerHTML = "<i class='fas fa-check'></i> SAVE DATA";
+        }
+
+        // Initialize Realtime Sync
+        initRealtimeRoster();
+
+        // -------------------------------------------------------------
+        // 🎵 YOUTUBE MUSIC PLAYER & VINYL CONTROLS
+        // -------------------------------------------------------------
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        var videoId = 'f1r0XZLNlGQ'; // The Weeknd, JENNIE & Lily Rose Depp - One Of The Girls
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0', 
+                width: '0',
+                videoId: videoId,
+                playerVars: { 
+                    'autoplay': 1, 
+                    'loop': 1, 
+                    'playlist': videoId,
+                    'controls': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1,
+                    'iv_load_policy': 3
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        // บันทึกตำแหน่งวินาทีเพลงต่อเนื่อง
+        setInterval(() => {
+            if (player && typeof player.getCurrentTime === 'function' && typeof player.getPlayerState === 'function') {
+                const state = player.getPlayerState();
+                if (state === YT.PlayerState.PLAYING) {
+                    localStorage.setItem('ped_music_time', player.getCurrentTime());
+                    localStorage.setItem('ped_music_playing', 'true');
+                    localStorage.setItem('ped_music_stamp', Date.now());
+                } else if (state === YT.PlayerState.PAUSED) {
+                    localStorage.setItem('ped_music_playing', 'false');
+                }
+            }
+        }, 200);
+
+        function onPlayerReady(event) {
+            updateTitle();
+            resumeOrPlayAudio();
+        }
+
+        function resumeOrPlayAudio() {
+            if (player && typeof player.playVideo === 'function') {
+                player.unMute();
+                player.setVolume(80);
+
+                const savedTime = parseFloat(localStorage.getItem('ped_music_time') || '0');
+                const wasPlaying = localStorage.getItem('ped_music_playing') !== 'false';
+                const lastStamp = parseInt(localStorage.getItem('ped_music_stamp') || '0');
+
+                let seekToTime = savedTime;
+                if (lastStamp > 0 && wasPlaying) {
+                    const elapsed = (Date.now() - lastStamp) / 1000;
+                    if (elapsed < 60) {
+                        seekToTime += elapsed;
+                    }
+                }
+
+                if (seekToTime > 1) {
+                    player.seekTo(seekToTime, true);
+                }
+                player.playVideo();
+            }
+        }
+
+        function updateTitle() {
+            try {
+                const videoData = player.getVideoData();
+                if (videoData && videoData.title) {
+                    document.getElementById('music-title').innerText = videoData.title;
+                } else {
+                    document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
+                }
+            } catch(e) {
+                document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            const icon = document.getElementById('play-icon');
+            const cont = document.getElementById('player-container');
+            const status = document.getElementById('music-status');
+            
+            // 1 = Playing, 2 = Paused
+            if (event.data == YT.PlayerState.PLAYING) {
+                icon.className = 'fas fa-pause vinyl-action-icon';
+                cont.classList.add('playing');
+                if (status) status.innerText = "NOW PLAYING";
+                updateTitle();
+            } else {
+                icon.className = 'fas fa-play vinyl-action-icon';
+                cont.classList.remove('playing');
+                if (status) status.innerText = "PAUSED";
+            }
+        }
+
+        // Click to Play / Pause Vinyl Player
+        document.getElementById('master-play').addEventListener('click', function() {
+            if (!player || typeof player.getPlayerState !== 'function') return;
+            const state = player.getPlayerState();
+            if (state == YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        });
+
+        // Autoplay on first click if blocked by browser policy
+        document.addEventListener('click', function initAudioOnInteraction() {
+            if (player && typeof player.getPlayerState === 'function') {
+                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                    resumeOrPlayAudio();
+                }
+            }
+            document.removeEventListener('click', initAudioOnInteraction);
+        }, { once: true });
+    </script>
 </body>
 </html>
