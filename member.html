@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEDSTYLE - MEMBERS</title>
+    
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --primary: #ffffff;
+            --accent: #f3d48b;
+            --bg-dark: #070709;
+            --card-bg: rgba(18, 18, 22, 0.85);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --danger: #ff4757;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at center, #14141c 0%, #050508 100%);
+            background-attachment: fixed;
+            background-position: center;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Rajdhani', 'Kanit', sans-serif;
+            margin: 0; min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
+
+        .custom-modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(15px); display: none;
+            justify-content: center; align-items: center; z-index: 9999;
+        }
+        .modal-box {
+            background: #111; border: 1px solid var(--border-color);
+            padding: 30px; border-radius: 15px; width: 90%; max-width: 400px;
+            text-align: center; box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+        .modal-box h3 { font-family: 'Orbitron'; margin-bottom: 20px; color: #fff; letter-spacing: 2px; }
+
+        #video-jumpscare {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 10000; display: none; pointer-events: none;
+        }
+        #video-jumpscare iframe { width: 100%; height: 100%; border: none; }
+
+        nav { 
+            display: flex; justify-content: space-between; padding: 15px 5%; 
+            background: rgba(10, 10, 14, 0.85); align-items: center; position: sticky; 
+            top: 0; z-index: 100; backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color);
+        }
+        #brand-name { 
+            font-weight: 900; letter-spacing: 3px; font-family: 'Orbitron'; font-size: 1.2rem; color: #fff;
+            display: flex; align-items: center; gap: 10px;
+        }
+        #brand-name img { width: 22px; height: 22px; object-fit: contain; filter: drop-shadow(0 0 6px rgba(255,255,255,0.7)); }
+
+        .container { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+
+        .glass-panel {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 15px; padding: 25px; margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+        }
+
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+
+        input, select { 
+            background: #000; border: 1px solid var(--border-color); padding: 12px; 
+            color: #fff; border-radius: 8px; font-family: 'Kanit'; outline: none; width: 100%;
+        }
+        input:focus { border-color: #fff; }
+
+        .btn-action { 
+            background: #ffffff; color: #000; border: none; padding: 10px 20px; 
+            border-radius: 8px; font-weight: 700; font-family: 'Orbitron'; cursor: pointer; 
+            transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+            justify-content: center; width: auto; font-size: 0.8rem; letter-spacing: 1px;
+        }
+        .btn-action:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(255, 255, 255, 0.4); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+
+        .section-title { 
+            font-family: 'Orbitron'; font-size: 0.9rem; font-weight: 900; 
+            letter-spacing: 4px; color: #fff; margin: 40px 0 15px; 
+            text-align: center; opacity: 0.9;
+        }
+
+        .roster-list { display: flex; flex-direction: column; gap: 10px; }
+        
+        .member-capsule {
+            background: rgba(15, 15, 18, 0.9); border: 1px solid var(--border-color);
+            padding: 10px 20px; display: flex; align-items: center;
+            border-radius: 50px; transition: var(--transition);
+            position: relative; overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        .member-capsule:hover { background: rgba(30, 30, 38, 0.95); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+        
+        .capsule-avatar { 
+            width: 42px; height: 42px; border-radius: 50%; 
+            background-size: cover; background-position: center;
+            border: 1px solid rgba(255, 255, 255, 0.3); margin-right: 15px;
+        }
+
+        .capsule-info { flex: 1; display: flex; align-items: center; }
+        
+        .capsule-name { 
+            font-family: 'Kanit', sans-serif; font-weight: 400; font-size: 1.05rem; 
+            color: #eee; letter-spacing: 0.5px;
+        }
+        .capsule-role-icon { margin-right: 8px; font-size: 0.85rem; }
+        .role-founder { color: #f3d48b; } 
+        .role-leader { color: #ff4757; }
+
+        /* Social Icons */
+        .social-group { display: flex; gap: 12px; align-items: center; }
+        .social-link { font-size: 1.1rem; transition: 0.3s; opacity: 0.8; }
+        .social-link:hover { transform: scale(1.2); opacity: 1; }
+        .fb-link { color: #1877f2; }
+        .yt-link { color: #ff0000; }
+        .tk-link { color: #fff; }
+
+        .admin-mini-controls { display: flex; gap: 10px; margin-left: 15px; border-left: 1px solid #333; padding-left: 15px; }
+        .mini-btn { background: none; border: none; color: #777; cursor: pointer; transition: 0.3s; }
+        .mini-btn:hover { color: #fff; }
+
+        .toast { 
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
+            background: #fff; color: #000; padding: 10px 30px; 
+            border-radius: 50px; font-weight: 900; z-index: 10001; font-size: 0.8rem;
+            font-family: 'Orbitron';
+        }
+
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="video-jumpscare"></div>
+
+    <div id="loginModal" class="custom-modal">
+        <div class="modal-box">
+            <h3>ADMIN LOGIN</h3>
+            <input type="password" id="adminPassInput" placeholder="ENTER PASSWORD">
+            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                <button onclick="handleAdminLogin()" class="btn-action">LOGIN</button>
+                <button onclick="closeModal('loginModal')" class="btn-action btn-secondary">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirmModal" class="custom-modal">
+        <div class="modal-box">
+            <h3 style="color: var(--danger);">DELETE MEMBER?</h3>
+            <p id="deleteMemberName" style="margin-bottom: 20px;"></p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="confirmDeleteBtn" class="btn-action" style="background: var(--danger); color: #fff;">DELETE</button>
+                <button onclick="closeModal('confirmModal')" class="btn-action btn-secondary">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
+    <nav>
+        <div id="brand-name">
+            <img src="logo.png" alt="logo">
+            PEDSTYLE 2K26
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button onclick="window.location.href='index.html'" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
+            <button onclick="location.reload()" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
+            <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i> ADMIN</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="memberView" class="fade-in">
+            <div id="adminPanel" class="hidden">
+                <div class="glass-panel" style="border: 1px solid rgba(255,255,255,0.2);">
+                    <h3 style="color: #fff; font-family: 'Orbitron'; margin-bottom: 20px;">SYSTEM CONTROL</h3>
+                    
+                    <div class="admin-grid" style="margin-bottom: 20px;">
+                        <div><label>สีธีม</label><input type="color" id="configColor" oninput="updateSetting('primary', this.value)"></div>
+                        <div><label>พื้นหลัง (URL)</label><input type="text" id="configBG" onchange="updateSetting('bg', this.value)"></div>
+                        <div><label>หัวข้อ Founder</label><input type="text" id="configHeadFounder" oninput="updateSetting('headFounder', this.value)"></div>
+                        <div><label>หัวข้อ Leader</label><input type="text" id="configHeadLeader" oninput="updateSetting('headLeader', this.value)"></div>
+                    </div>
+
+                    <div style="background: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px;">
+                        <h4 id="formTitle" style="margin-bottom: 15px; font-family: 'Orbitron';">ADD / EDIT MEMBER</h4>
+                        <div class="admin-grid" style="margin-bottom: 15px;">
+                            <input type="hidden" id="editMemberId">
+                            <input type="text" id="newName" placeholder="ชื่อสมาชิก">
+                            <input type="text" id="newImg" placeholder="ลิงก์รูป (URL)">
+                            <input type="text" id="newFB" placeholder="Facebook (Link)">
+                            <input type="text" id="newYT" placeholder="YouTube (Link)">
+                            <input type="text" id="newTK" placeholder="TikTok (Link)">
+                            <select id="newRole">
+                                <option value="founder">Founder</option>
+                                <option value="leader">Leader</option>
+                                <option value="member">Member</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="saveMember()" id="saveBtn" class="btn-action">SAVE DATA</button>
+                            <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rosterDisplay">
+                <div id="section-founder" class="hidden">
+                    <div class="section-title" id="titleFounder">FOUNDERS</div>
+                    <div class="roster-list" id="founderList"></div>
+                </div>
+                <div id="section-leader" class="hidden">
+                    <div class="section-title" id="titleLeader">LEADERS</div>
+                    <div class="roster-list" id="leaderList"></div>
+                </div>
+                <div id="section-member" class="hidden">
+                    <div class="section-title" id="titleMember">MEMBERS</div>
+                    <div class="roster-list" id="memberList"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://dernyoungsay-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let isAdmin = false;
+        let deleteTargetId = null;
+
+        function openAdminModal() {
+            if(isAdmin) { location.reload(); return; }
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function handleAdminLogin() {
+            const pass = document.getElementById('adminPassInput').value;
+            // ยอมรับรหัสผ่าน pedstyle หรือ dys870
+            if(pass === "pedstyle" || pass === "dys870" || pass === "1234") {
+                isAdmin = true;
+                closeModal('loginModal');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('navAdmin').innerHTML = '<i class="fas fa-sign-out-alt"></i> LOGOUT';
+                showToast("LOGGED IN AS ADMIN");
+                renderRoster();
+            } else {
+                closeModal('loginModal');
+                triggerJumpscare();
+            }
+        }
+
+        function triggerJumpscare() {
+            const container = document.getElementById('video-jumpscare');
+            container.innerHTML = `<iframe src="https://www.youtube.com/embed/u8UdAAX_n28?autoplay=1&controls=0&start=13&mute=0" allow="autoplay"></iframe>`;
+            container.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            setTimeout(() => {
+                container.style.display = 'none';
+                container.innerHTML = '';
+                document.body.style.overflow = 'auto';
+            }, 4000);
+        }
+
+        function showToast(m) {
+            const t = document.createElement('div'); t.className = 'toast fade-in';
+            t.innerText = m; document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        function updateSetting(key, value) { if(isAdmin) db.ref('settings/' + key).set(value); }
+
+        db.ref('settings').on('value', snap => {
+            const s = snap.val() || {};
+            if(s.primary) {
+                document.documentElement.style.setProperty('--primary', s.primary);
+                document.getElementById('configColor').value = s.primary;
+            }
+            if(s.bg) document.body.style.backgroundImage = `url('${s.bg}')`;
+            document.getElementById('titleFounder').innerText = s.headFounder || "FOUNDERS";
+            document.getElementById('titleLeader').innerText = s.headLeader || "LEADERS";
+        });
+
+        function renderRoster() {
+            db.ref('roster').on('value', snap => {
+                const lists = { founder: 'founderList', leader: 'leaderList', member: 'memberList' };
+                const sections = { founder: 'section-founder', leader: 'section-leader', member: 'section-member' };
+                
+                Object.values(lists).forEach(id => document.getElementById(id).innerHTML = "");
+                Object.values(sections).forEach(id => document.getElementById(id).classList.add('hidden'));
+
+                const data = snap.val();
+                if(!data) return;
+
+                Object.keys(data).forEach(id => {
+                    const item = data[id];
+                    const capsule = document.createElement('div');
+                    capsule.className = 'member-capsule fade-in';
+                    
+                    const displayImg = (item.img && item.img.trim() !== "") ? item.img : "logo.png";
+
+                    let roleIcon = '';
+                    if(item.role === 'founder') roleIcon = '<i class="fas fa-crown capsule-role-icon role-founder"></i>';
+                    else if(item.role === 'leader') roleIcon = '<i class="fas fa-star capsule-role-icon role-leader"></i>';
+                    else roleIcon = '<i class="fas fa-user capsule-role-icon" style="opacity:0.3"></i>';
+
+                    const fbHTML = item.fb ? `<a href="${item.fb}" target="_blank" class="social-link fb-link"><i class="fab fa-facebook"></i></a>` : '';
+                    const ytHTML = item.yt ? `<a href="${item.yt}" target="_blank" class="social-link yt-link"><i class="fab fa-youtube"></i></a>` : '';
+                    const tkHTML = item.tk ? `<a href="${item.tk}" target="_blank" class="social-link tk-link"><i class="fab fa-tiktok"></i></a>` : '';
+
+                    capsule.innerHTML = `
+                        <div class="capsule-avatar" style="background-image: url('${displayImg}')"></div>
+                        <div class="capsule-info">
+                            <span class="capsule-name">${roleIcon}${item.name}</span>
+                        </div>
+                        <div class="social-group">
+                            ${fbHTML}
+                            ${ytHTML}
+                            ${tkHTML}
+                        </div>
+                        ${isAdmin ? `
+                        <div class="admin-mini-controls">
+                            <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name}', '${item.img}', '${item.fb || ''}', '${item.role}', '${item.yt || ''}', '${item.tk || ''}')"><i class="fas fa-edit"></i></button>
+                            <button class="mini-btn" onclick="askDeleteMember('${id}', '${item.name}')"><i class="fas fa-trash"></i></button>
+                        </div>` : ''}
+                    `;
+                    
+                    if(lists[item.role]) {
+                        document.getElementById(lists[item.role]).appendChild(capsule);
+                        document.getElementById(sections[item.role]).classList.remove('hidden');
+                    }
+                });
+            });
+        }
+
+        function saveMember() {
+            if(!isAdmin) return;
+            const id = document.getElementById('editMemberId').value;
+            const data = {
+                name: document.getElementById('newName').value,
+                img: document.getElementById('newImg').value,
+                fb: document.getElementById('newFB').value,
+                yt: document.getElementById('newYT').value,
+                tk: document.getElementById('newTK').value,
+                role: document.getElementById('newRole').value
+            };
+            if(!data.name) return showToast("กรุณาใส่ชื่อสมาชิก");
+
+            if(id) db.ref('roster/' + id).update(data).then(() => showToast("อัปเดตสำเร็จ"));
+            else db.ref('roster').push(data).then(() => showToast("เพิ่มสมาชิกสำเร็จ"));
+            resetForm();
+        }
+
+        function askDeleteMember(id, name) {
+            deleteTargetId = id;
+            document.getElementById('deleteMemberName').innerText = name;
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        document.getElementById('confirmDeleteBtn').onclick = () => {
+            if(deleteTargetId) {
+                db.ref('roster/' + deleteTargetId).remove().then(() => {
+                    showToast("ลบข้อมูลสำเร็จ");
+                    closeModal('confirmModal');
+                });
+            }
+        };
+
+        function prepareEdit(id, name, img, fb, role, yt, tk) {
+            document.getElementById('editMemberId').value = id;
+            document.getElementById('newName').value = name;
+            document.getElementById('newImg').value = img;
+            document.getElementById('newFB').value = fb;
+            document.getElementById('newYT').value = yt || "";
+            document.getElementById('newTK').value = tk || "";
+            document.getElementById('newRole').value = role;
+            document.getElementById('saveBtn').innerText = "UPDATE DATA";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('editMemberId').value = "";
+            document.getElementById('newName').value = "";
+            document.getElementById('newImg').value = "";
+            document.getElementById('newFB').value = "";
+            document.getElementById('newYT').value = "";
+            document.getElementById('newTK').value = "";
+            document.getElementById('saveBtn').innerText = "SAVE DATA";
+        }
+
+        renderRoster();
+    </script>
+</body>
+</html>
