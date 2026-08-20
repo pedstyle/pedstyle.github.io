@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="th">
 
 <head>
@@ -6,16 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PEDSTYLE</title>
 
-    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="icon" type="image/png" href="favicon.png">
 
     <link
-        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;500;600;700&family=Inter:wght@300;400;500&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&family=Kanit:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Firebase Realtime Database SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
     <style>
         :root {
@@ -26,7 +22,6 @@
             --bg-dark: #08080a;
             --card-bg: rgba(20, 20, 24, 0.75);
             --border-color: rgba(255, 255, 255, 0.08);
-            --danger: #ff4757;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -44,9 +39,11 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        /* --- Background & Effects --- */
+        /* --- Background & Atmosphere --- */
         .bg-wrapper {
             position: fixed;
             top: 0;
@@ -64,7 +61,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.8) 100%);
+            background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.85) 100%);
             z-index: -1;
             pointer-events: none;
         }
@@ -82,7 +79,7 @@
         }
 
         /* ================================================= */
-        /* --- 🏠 VIEW 1: HOME LANDING SCREEN --- */
+        /* --- ðŸ  VIEW 1: HOME LANDING SCREEN --- */
         /* ================================================= */
         #view-home {
             min-height: 100vh;
@@ -119,7 +116,7 @@
             text-decoration: none;
             color: #fff;
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 1px;
         }
@@ -133,7 +130,7 @@
 
         .nav-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             color: rgba(255, 255, 255, 0.5);
             letter-spacing: 2px;
         }
@@ -142,13 +139,13 @@
             text-align: center;
             width: 100%;
             padding: 0 30px;
-            margin-top: -30px;
+            margin-top: -20px;
         }
 
         .home-title {
             font-family: 'Orbitron', sans-serif;
-            font-size: clamp(2.4rem, 8vw, 4.5rem);
-            font-weight: 700;
+            font-size: clamp(2.4rem, 8vw, 4.8rem);
+            font-weight: 900;
             letter-spacing: 15px;
             margin-bottom: 10px;
             background: linear-gradient(180deg, #fff 0%, #777 100%);
@@ -160,7 +157,7 @@
 
         .home-subtext {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.65rem;
+            font-size: 0.68rem;
             letter-spacing: 5px;
             color: rgba(255, 255, 255, 0.4);
             margin-bottom: 45px;
@@ -179,18 +176,19 @@
             text-decoration: none;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            border-radius: 14px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
             backdrop-filter: blur(10px);
             cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
 
         .btn-enter-member:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.4);
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.15);
         }
 
         .btn-text-main {
@@ -202,23 +200,24 @@
         }
 
         .btn-text-sub {
-            font-size: 0.5rem;
+            font-size: 0.55rem;
             letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.35);
             margin-top: 5px;
+            font-family: 'Kanit', sans-serif;
         }
 
         .home-footer {
             position: absolute;
             bottom: 30px;
-            font-size: 0.55rem;
-            color: rgba(255, 255, 255, 0.2);
+            font-size: 0.6rem;
+            color: rgba(255, 255, 255, 0.25);
             letter-spacing: 3px;
             font-family: 'Orbitron', sans-serif;
         }
 
         /* ================================================= */
-        /* --- 👥 VIEW 2: MEMBERS ROSTER SCREEN --- */
+        /* --- ðŸ‘¥ VIEW 2: MEMBERS ROSTER SCREEN --- */
         /* ================================================= */
         #view-members {
             min-height: 100vh;
@@ -241,25 +240,67 @@
         #brand-name {
             font-weight: 900;
             letter-spacing: 3px;
-            font-family: 'Orbitron';
+            font-family: 'Orbitron', sans-serif;
             font-size: 1.15rem;
             color: #fff;
             display: flex;
             align-items: center;
             gap: 12px;
+            text-decoration: none;
+            cursor: pointer;
         }
 
         #brand-name img {
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             object-fit: contain;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.7));
         }
 
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-action {
+            background: #ffffff;
+            color: #000;
+            border: none;
+            padding: 9px 22px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            width: auto;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- Main Layout --- */
         .member-container {
             max-width: 1240px;
             margin: 0 auto;
-            padding: 35px 20px 100px;
+            padding: 35px 20px 120px;
         }
 
         .page-hero-header {
@@ -270,7 +311,7 @@
         .hero-title {
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(2.4rem, 7vw, 4.2rem);
-            font-weight: 700;
+            font-weight: 900;
             letter-spacing: 14px;
             margin-bottom: 10px;
             background: linear-gradient(180deg, #ffffff 0%, #777777 100%);
@@ -282,103 +323,19 @@
 
         .hero-subtext {
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             letter-spacing: 6px;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.45);
             text-transform: uppercase;
         }
 
-        /* --- Admin Panel --- */
-        .glass-panel {
-            background: rgba(16, 16, 22, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 20px;
-            padding: 25px;
-            margin-bottom: 35px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-        }
-
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            text-align: left;
-        }
-
-        .input-group label {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.7);
-            font-family: 'Kanit';
-        }
-
-        input,
-        select {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--border-color);
-            padding: 12px 14px;
-            color: #fff;
-            border-radius: 10px;
-            font-family: 'Kanit';
-            outline: none;
-            width: 100%;
-            transition: border 0.3s;
-            font-size: 0.9rem;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: rgba(255, 255, 255, 0.4);
-        }
-
-        .btn-action {
-            background: #ffffff;
-            color: #000;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 10px;
-            font-weight: 700;
-            font-family: 'Orbitron';
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: center;
-            width: auto;
-            font-size: 0.8rem;
-            letter-spacing: 1px;
-        }
-
-        .btn-action:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* --- Section Header with Lines --- */
+        /* --- Section Header with Glow Lines --- */
         .section-header {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 20px;
-            margin: 45px 0 25px;
+            margin: 50px 0 25px;
         }
 
         .header-line {
@@ -452,6 +409,11 @@
             object-fit: cover;
             border: 1px solid rgba(255, 255, 255, 0.15);
             background: #111;
+            transition: transform 0.3s ease;
+        }
+
+        .member-card:hover .card-avatar {
+            transform: scale(1.05);
         }
 
         .status-dot {
@@ -503,6 +465,7 @@
         .card-role-founder:hover {
             border-color: #f3d48b;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(243, 212, 139, 0.35);
+            transform: translateY(-3px);
         }
 
         .card-role-founder .card-role-badge {
@@ -531,6 +494,7 @@
         .card-role-leader:hover {
             border-color: #ff4757;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 71, 87, 0.35);
+            transform: translateY(-3px);
         }
 
         .card-role-leader .card-role-badge {
@@ -559,6 +523,7 @@
         .card-role-member:hover {
             border-color: #ffffff;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px);
         }
 
         .card-role-member .card-role-badge {
@@ -617,52 +582,7 @@
             border-color: rgba(255, 255, 255, 0.6);
             color: #ffffff;
             box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
-        }
-
-        .admin-mini-controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            justify-content: flex-end;
-            width: 100%;
-        }
-
-        .mini-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #aaa;
-            padding: 4px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.75rem;
-            transition: 0.3s;
-        }
-
-        .mini-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #fff;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            color: #000;
-            padding: 12px 35px;
-            border-radius: 50px;
-            font-weight: 900;
-            z-index: 10001;
-            font-size: 0.85rem;
-            font-family: 'Kanit', 'Orbitron';
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-        }
-
-        .hidden {
-            display: none !important;
+            transform: scale(1.1);
         }
 
         .fade-in {
@@ -681,66 +601,19 @@
             }
         }
 
-        .empty-placeholder {
+        /* --- Footer --- */
+        footer.site-footer {
             text-align: center;
-            padding: 80px 20px;
-            color: rgba(255, 255, 255, 0.35);
-            font-family: 'Kanit';
-            font-size: 0.95rem;
-        }
-
-        /* --- Custom Modals --- */
-        .custom-modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .modal-box {
-            background: #111116;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 30px;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 440px;
-            text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.05);
-        }
-
-        .modal-box h3 {
-            font-family: 'Orbitron';
-            margin-bottom: 20px;
-            color: #fff;
-            letter-spacing: 2px;
-            font-size: 1.1rem;
-        }
-
-        #video-jumpscare {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 10000;
-            display: none;
-            pointer-events: none;
-        }
-
-        #video-jumpscare iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
+            padding: 40px 20px 80px;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 3px;
+            font-family: 'Orbitron', sans-serif;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         /* ================================================= */
-        /* --- 💿 FLOATING VINYL MUSIC PLAYER (BOTTOM-RIGHT) --- */
+        /* --- ðŸ’¿ FLOATING VINYL MUSIC PLAYER (BOTTOM-RIGHT) --- */
         /* ================================================= */
         .vinyl-player-wrapper {
             position: fixed;
@@ -754,14 +627,14 @@
         }
 
         .vinyl-info-box {
-            background: rgba(12, 12, 16, 0.9);
+            background: rgba(12, 12, 16, 0.92);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 14px;
             padding: 10px 14px;
             min-width: 220px;
-            max-width: 260px;
+            max-width: 270px;
             opacity: 0;
             transform: translateX(10px);
             transition: all 0.3s ease;
@@ -778,7 +651,7 @@
         }
 
         .vinyl-song-title {
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             color: #fff;
             white-space: nowrap;
             overflow: hidden;
@@ -788,14 +661,14 @@
         }
 
         .vinyl-status {
-            font-size: 0.5rem;
-            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.52rem;
+            color: rgba(255, 255, 255, 0.45);
             font-family: 'Orbitron', sans-serif;
             letter-spacing: 1px;
             margin-top: 2px;
         }
 
-        /* --- 🔊 Volume Slider Styling --- */
+        /* --- ðŸ”Š Volume Slider Styling --- */
         .volume-control-row {
             display: flex;
             align-items: center;
@@ -807,11 +680,11 @@
         }
 
         .vol-btn-icon {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: rgba(255, 255, 255, 0.7);
             cursor: pointer;
             transition: all 0.2s ease;
-            width: 16px;
+            width: 18px;
             text-align: center;
             display: inline-flex;
             align-items: center;
@@ -878,7 +751,7 @@
             background:
                 radial-gradient(circle, #080808 30%, #181818 32%, #080808 35%, #1c1c1c 38%, #080808 42%, #181818 46%, #080808 50%, #1c1c1c 55%, #080808 60%, #151515 65%, #080808 70%),
                 #111;
-            border: 2px solid rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.18);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.05);
             position: relative;
             cursor: pointer;
@@ -891,7 +764,7 @@
 
         .vinyl-disc:hover {
             transform: scale(1.08);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.25);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.3);
         }
 
         /* Spinning Animation */
@@ -912,7 +785,7 @@
         }
 
         .playing .vinyl-disc {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.35);
         }
 
         @keyframes rotateVinyl {
@@ -932,8 +805,9 @@
             border-radius: 50%;
             overflow: hidden;
             position: relative;
-            border: 2px solid rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.5);
             box-shadow: 0 0 8px rgba(0, 0, 0, 0.8);
+            background: #000;
         }
 
         .vinyl-label img {
@@ -963,7 +837,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             z-index: 10;
             opacity: 0;
             transition: opacity 0.2s ease;
@@ -973,13 +847,6 @@
 
         .vinyl-disc:hover .vinyl-action-icon {
             opacity: 1;
-        }
-
-        #youtube-player {
-            position: absolute;
-            top: -1000px;
-            left: -1000px;
-            visibility: hidden;
         }
 
         @media (max-width: 1080px) {
@@ -1031,7 +898,7 @@
 
             .vinyl-info-box {
                 min-width: 175px;
-                max-width: 210px;
+                max-width: 220px;
                 padding: 8px 10px;
             }
 
@@ -1044,20 +911,17 @@
 
 <body>
 
-    <!-- Jumpscare Container -->
-    <div id="video-jumpscare"></div>
-
     <!-- Background & effects -->
     <div class="bg-wrapper"></div>
     <div class="vignette"></div>
 
     <!-- ========================================== -->
-    <!-- 🏠 VIEW 1: HOME LANDING SCREEN             -->
+    <!-- ðŸ  VIEW 1: HOME LANDING SCREEN             -->
     <!-- ========================================== -->
     <div id="view-home" class="spa-view">
         <div class="top-nav-home">
             <a href="#" class="nav-logo">
-                <img src="logo.png" alt="icon">
+                <img src="logo.png" alt="icon" onerror="this.src='favicon.png'">
                 PEDSTYLE
             </a>
             <div class="nav-text">V.2026.1</div>
@@ -1081,25 +945,23 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- 👥 VIEW 2: MEMBERS ROSTER SCREEN           -->
+    <!-- ðŸ‘¥ VIEW 2: MEMBERS ROSTER SCREEN           -->
     <!-- ========================================== -->
     <div id="view-members" class="spa-view hidden-view">
-        <!-- Top Navigation -->
+        <!-- Top Navigation (Brand + Only HOME button) -->
         <nav class="member-nav">
-            <div id="brand-name">
-                <img src="logo.png" alt="logo">
+            <div id="brand-name" onclick="navigateTo('home')">
+                <img src="logo.png" alt="logo" onerror="this.src='favicon.png'">
                 PEDSTYLE 2K26
             </div>
-            <div style="display: flex; gap: 10px;">
-                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i>
-                    BACK</button>
-                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-home"></i>
-                    HOME</button>
-                <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i>
-                    ADMIN</button>
+            <div class="nav-actions">
+                <button onclick="navigateTo('home')" class="btn-action btn-secondary">
+                    <i class="fas fa-home"></i> HOME
+                </button>
             </div>
         </nav>
 
+        <!-- Main Member Roster Container -->
         <div class="member-container">
             <!-- Hero Header Title -->
             <div class="page-hero-header">
@@ -1107,60 +969,10 @@
                 <div class="hero-subtext">THE OFFICIAL MEMBERS ROSTER</div>
             </div>
 
-            <!-- Admin Management Panel -->
-            <div id="adminPanel" class="hidden">
-                <div class="glass-panel">
-                    <div
-                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 style="color: #fff; font-family: 'Orbitron'; font-size: 1.1rem;"><i
-                                class="fas fa-user-plus"></i> ADD / EDIT MEMBER</h3>
-                        <button onclick="logoutAdmin()" class="btn-action btn-secondary" style="font-size: 0.75rem;"><i
-                                class="fas fa-sign-out-alt"></i> LOGOUT</button>
-                    </div>
-
-                    <div class="admin-grid" style="margin-bottom: 20px;">
-                        <input type="hidden" id="editMemberId">
-
-                        <div class="input-group">
-                            <label>ชื่อสมาชิก *</label>
-                            <input type="text" id="newName" placeholder="ใส่ชื่อสมาชิก..."
-                                onkeydown="if(event.key === 'Enter') saveMember()">
-                        </div>
-
-                        <div class="input-group">
-                            <label>ลิงก์ Facebook (URL) *</label>
-                            <input type="text" id="newFB" placeholder="https://facebook.com/..."
-                                onkeydown="if(event.key === 'Enter') saveMember()">
-                        </div>
-
-                        <div class="input-group">
-                            <label>ลิงก์รูปโปรไฟล์ (URL) - เว้นว่างได้</label>
-                            <input type="text" id="newImg" placeholder="https://.../photo.png"
-                                onkeydown="if(event.key === 'Enter') saveMember()">
-                        </div>
-
-                        <div class="input-group">
-                            <label>ตำแหน่ง (Role) *</label>
-                            <select id="newRole">
-                                <option value="leader">Leader (กรอบแดง)</option>
-                                <option value="founder">Founder (กรอบทอง)</option>
-                                <option value="member">Member (กรอบเทาแสง)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; gap: 10px;">
-                        <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE
-                            DATA</button>
-                        <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
-                    </div>
-                </div>
-            </div>
-
             <!-- Roster Display Sections -->
             <div id="rosterDisplay">
                 <!-- FOUNDERS -->
-                <div id="section-founder" class="hidden">
+                <div id="section-founder">
                     <div class="section-header">
                         <span class="header-line"
                             style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
@@ -1177,7 +989,7 @@
                 </div>
 
                 <!-- LEADERS -->
-                <div id="section-leader" class="hidden">
+                <div id="section-leader">
                     <div class="section-header">
                         <span class="header-line"
                             style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
@@ -1194,7 +1006,7 @@
                 </div>
 
                 <!-- MEMBERS -->
-                <div id="section-member" class="hidden">
+                <div id="section-member">
                     <div class="section-header">
                         <span class="header-line"
                             style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
@@ -1209,54 +1021,24 @@
                     </div>
                     <div class="roster-grid" id="memberList"></div>
                 </div>
-
-                <div id="emptyNotice" class="empty-placeholder hidden">
-                    <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.35;"></i>
-                    <p style="font-weight: 500;">ยังไม่มีรายชื่อสมาชิก</p>
-                    <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">(กดปุ่ม <b>ADMIN</b> ด้านบน ใส่รหัส
-                        <code>adminpedboys</code> เพื่อเริ่มเพิ่มสมาชิก)
-                    </p>
-                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Admin Login Modal -->
-    <div id="loginModal" class="custom-modal">
-        <div class="modal-box">
-            <h3>ADMIN LOGIN</h3>
-            <input type="password" id="adminPassInput" placeholder="ENTER PASSWORD"
-                onkeydown="if(event.key === 'Enter') handleAdminLogin()">
-            <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-                <button onclick="handleAdminLogin()" class="btn-action">LOGIN</button>
-                <button onclick="closeModal('loginModal')" class="btn-action btn-secondary">CANCEL</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Confirm Delete Modal -->
-    <div id="confirmModal" class="custom-modal">
-        <div class="modal-box">
-            <h3 style="color: var(--danger);">DELETE MEMBER?</h3>
-            <p id="deleteMemberName" style="margin-bottom: 20px; font-family: 'Kanit'; color: rgba(255,255,255,0.7);">
-            </p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <button id="confirmDeleteBtn" class="btn-action"
-                    style="background: var(--danger); color: #fff;">DELETE</button>
-                <button onclick="closeModal('confirmModal')" class="btn-action btn-secondary">CANCEL</button>
-            </div>
-        </div>
+        <!-- Footer -->
+        <footer class="site-footer">
+            &copy; 2026 PEDSTYLE &bull; WEBSITE LASTNAME PEDSTYLE BY INEEDYOU
+        </footer>
     </div>
 
     <!-- ========================================== -->
-    <!-- 💿 FLOATING VINYL MUSIC PLAYER (BOTTOM-RIGHT) -->
+    <!-- ðŸ’¿ FLOATING VINYL MUSIC PLAYER (BOTTOM-RIGHT) -->
     <!-- ========================================== -->
     <div class="vinyl-player-wrapper" id="player-container">
         <div class="vinyl-info-box" id="vinylInfoBox">
-            <div class="vinyl-song-title" id="music-title">The Weeknd, JENNIE - One Of The Girls</div>
-            <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY/PAUSE</div>
+            <div class="vinyl-song-title" id="music-title">PEDSTYLE - OFFICIAL TRACK</div>
+            <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY / PAUSE</div>
 
-            <!-- 🔊 Volume Control (เพิ่มเสียง / ลดเสียง / ปิดเสียง) -->
+            <!-- ðŸ”Š Volume Control -->
             <div class="volume-control-row">
                 <i class="fas fa-volume-high vol-btn-icon" id="vol-icon" onclick="toggleMute(event)"
                     title="Mute / Unmute"></i>
@@ -1269,7 +1051,7 @@
         <div class="vinyl-disc" id="master-play" title="Click to Play / Pause">
             <div class="vinyl-disc-inner">
                 <div class="vinyl-label">
-                    <img src="https://img.youtube.com/vi/f1r0XZLNlGQ/hqdefault.jpg" alt="Cover" id="music-cover">
+                    <img src="pedstyle.png" alt="Cover" id="music-cover" onerror="this.src='logo.png'">
                 </div>
                 <div class="vinyl-center-hole"></div>
             </div>
@@ -1277,24 +1059,221 @@
         </div>
     </div>
 
-    <div id="youtube-player"></div>
-
     <script>
-        // -------------------------------------------------------------
-        // 🌟 SEAMLESS SPA PAGE NAVIGATION (MUSIC NEVER INTERRUPTED)
-        // -------------------------------------------------------------
-        function navigateTo(targetView) {
-            // Trigger song play immediately upon entering member roster
-            if (player && typeof player.playVideo === 'function') {
-                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                    player.unMute();
-                    player.setVolume(currentVolume);
-                    player.playVideo();
-                }
-            }
+        /* --- Anti-Inspect & Anti-Copy Protection --- */
+        (function () {
+            document.addEventListener('contextmenu', function (e) {
+                e.preventDefault();
+                return false;
+            }, false);
 
+            document.addEventListener('keydown', function (e) {
+                if (
+                    e.key === 'F12' ||
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+                    (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.key === 's' || e.key === 'S'))
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, false);
+        })();
+
+        /* ================================================= */
+        /* --- ðŸ‘¥ OFFICIAL MEMBERS ROSTER DATA --- */
+        /* ================================================= */
+        const membersData = [
+            // --- FOUNDERS ---
+            {
+                name: "Dell Pedstyle",
+                role: "founder",
+                fb: "https://www.facebook.com/profile.php?id=61591147011758",
+                img: "https://cdn.discordapp.com/attachments/1537692655549681775/1539860033981124708/7107ce2b5ca0c4db0c749cfd3db3542c.png?ex=6a87d9e9&is=6a868869&hm=af30f6afd216db2ffd9f0ee0d134ff56bcc5868fcb8a39606963920ee33b8068&"
+            },
+            {
+                name: "Nongkaijaew Pedstyle",
+                role: "founder",
+                fb: "https://www.facebook.com/profile.php?id=61592696654346",
+                img: "https://img1.pic.in.th/images/e9fe39162fdbe92d651be7aec736689e.jpg"
+            },
+
+            // --- LEADERS ---
+            {
+                name: "Patrick Pedstyle",
+                role: "leader",
+                fb: "https://www.facebook.com/profile.php?id=61591142447730",
+                img: "https://img2.pic.in.th/17add3e815ff8512e176787f767ea382.jpg"
+            },
+            {
+                name: "Zack Pedstyle",
+                role: "leader",
+                fb: "https://www.facebook.com/zack.watdaimod",
+                img: "https://img2.pic.in.th/IMG_2865.jpg"
+            },
+            {
+                name: "Ninee Pedstyle",
+                role: "leader",
+                fb: "https://www.facebook.com/ninee.winterfell",
+                img: "https://img2.pic.in.th/Anime_DemonSlayer_Muzan_3.webp"
+            },
+
+            // --- MEMBERS ---
+            {
+                name: "High Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/profile.php?id=61592905086141",
+                img: "https://img2.pic.in.th/8d364ba5dc9ac2b2d783e9d298c29a72.png"
+            },
+            {
+                name: "Edgarist Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/edgar.ist",
+                img: "https://img2.pic.in.th/f6f8412ab2c027b6a17527f5fb4a9ea4.jpg"
+            },
+            {
+                name: "Aex Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/profile.php?id=61591868400182",
+                img: "https://img1.pic.in.th/images/8e59ca17-9163-4a7f-9f41-07db61fabdcd.jpg"
+            },
+            {
+                name: "Kingset Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/profile.php?id=61562300212561",
+                img: "https://img1.pic.in.th/images/692362461a7e0b20bf7d6b6e77a3277f.jpg"
+            },
+            {
+                name: "Nonggusdek Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/profile.php?id=61591414257209",
+                img: "https://img1.pic.in.th/images/2a561acba2472f908e77b38db7773115.jpg"
+            },
+            {
+                name: "Zen Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/Zenwasd",
+                img: "https://img2.pic.in.th/29392d9591135a6c59295709c90a7e04.jpg"
+            },
+            {
+                name: "Mystly Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/profile.php?id=61592845136141",
+                img: "https://img1.pic.in.th/images/80cf6c82514db9c9b4b66148f4bd11e2.jpg"
+            },
+            {
+                name: "Real Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/real.dernyoungsay.993545",
+                img: "https://img2.pic.in.th/f38c31ee5824ab2ac1921a8aff925417.jpg"
+            },
+            {
+                name: "Lnwdev Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/profile.php?id=61584418826474",
+                img: "https://img1.pic.in.th/images/b2d573e93b7d124c662c64c1e6ada9bf.jpg"
+            },
+            {
+                name: "Murquie Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/macdemurquie",
+                img: "https://img2.pic.in.th/2617e7c3c7e3f862dc4a59a9d5f93cbd.jpg"
+            },
+            {
+                name: "Catenria Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/catenria.pedboy",
+                img: "https://img1.pic.in.th/images/985453a96d05146ad1842040e919cb3f.jpg"
+            },
+            {
+                name: "Aoy Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/babythuggirlcoolkid",
+                img: "https://img1.pic.in.th/images/c5dae6a2f89de23d1223cc2381f4cb95.jpg"
+            },
+            {
+                name: "Werkk Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/babythuggirlcoolkid",
+                img: "https://img1.pic.in.th/images/c5dae6a2f89de23d1223cc2381f4cb95.jpg"
+            },
+            {
+                name: "Ashi Pedstyle",
+                role: "member",
+                fb: "https://www.facebook.com/profile.php?id=61581758003336",
+                img: "logo.png"
+            }
+        ];
+
+        /* --- Render Roster Cards --- */
+        function renderRoster() {
+            const lists = { founder: 'founderList', leader: 'leaderList', member: 'memberList' };
+            const countCounters = { founder: 0, leader: 0, member: 0 };
+
+            Object.values(lists).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = '';
+            });
+
+            membersData.forEach(item => {
+                const role = (item.role || 'member').toLowerCase();
+                const targetListId = lists[role];
+                if (!targetListId) return;
+
+                countCounters[role]++;
+
+                const displayImg = (item.img && item.img.trim() !== '') ? item.img : 'logo.png';
+                const fbHTML = item.fb ? `<a href="${item.fb}" target="_blank" rel="noopener noreferrer" class="card-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : '';
+                const roleIcon = (role === 'member') ? 'fa-users' : 'fa-crown';
+
+                const card = document.createElement('div');
+                card.className = `member-card card-role-${role} fade-in`;
+
+                card.innerHTML = `
+                    <div style="width: 100%;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div class="card-main">
+                                <div class="avatar-wrap">
+                                    <img src="${displayImg}" alt="${item.name}" class="card-avatar" onerror="this.src='logo.png'">
+                                    <span class="status-dot"></span>
+                                </div>
+                                <div class="card-info">
+                                    <div class="card-name">${item.name}</div>
+                                    <div class="card-role-badge">${role.toUpperCase()}</div>
+                                </div>
+                            </div>
+                            <div class="card-actions">
+                                <i class="fa-solid ${roleIcon} role-crown"></i>
+                                <div class="social-btns">
+                                    ${fbHTML}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById(targetListId).appendChild(card);
+            });
+
+            // Update Counts
+            document.getElementById('countFounder').innerText = `[${countCounters.founder}]`;
+            document.getElementById('countLeader').innerText = `[${countCounters.leader}]`;
+            document.getElementById('countMember').innerText = `[${countCounters.member}]`;
+        }
+
+        /* ================================================= */
+        /* --- ðŸ§­ SPA VIEW NAVIGATION --- */
+        /* ================================================= */
+        function navigateTo(targetView) {
             const homeView = document.getElementById('view-home');
             const membersView = document.getElementById('view-members');
+
+            // Start playing audio when user navigates to members
+            if (audio && audio.paused) {
+                audio.play().then(() => {
+                    updatePlayerUI(true);
+                }).catch(() => { });
+            }
 
             if (targetView === 'members') {
                 homeView.classList.add('hidden-view');
@@ -1309,356 +1288,80 @@
             }
         }
 
-        // Check hash on page load
-        window.addEventListener('DOMContentLoaded', () => {
-            if (window.location.hash === '#members') {
-                navigateTo('members');
-            }
-        });
+        /* ================================================= */
+        /* --- ðŸ’¿ STANDALONE LOCAL AUDIO MUSIC ENGINE --- */
+        /* ================================================= */
+        const audio = new Audio();
+        audio.src = 'music.mp3';
+        audio.loop = true;
+        audio.preload = 'auto';
 
-        // -------------------------------------------------------------
-        // 🌟 PEDSTYLE OFFICIAL FIREBASE REALTIME DATABASE CONFIGURATION
-        // -------------------------------------------------------------
-        const firebaseConfig = {
-            databaseURL: "https://pedstyle-21005-default-rtdb.asia-southeast1.firebasedatabase.app/"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let isAdmin = false;
-        let deleteTargetId = null;
-        let currentRoster = {};
-
-        function openAdminModal() {
-            if (isAdmin) {
-                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
-                return;
-            }
-            document.getElementById('adminPassInput').value = "";
-            document.getElementById('loginModal').style.display = 'flex';
-            setTimeout(() => document.getElementById('adminPassInput').focus(), 100);
-        }
-
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-        function handleAdminLogin() {
-            const pass = document.getElementById('adminPassInput').value;
-            if (pass === "adminpedboys") {
-                isAdmin = true;
-                closeModal('loginModal');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                document.getElementById('navAdmin').innerHTML = '<i class="fas fa-user-check"></i> ADMIN MODE';
-                showToast("LOGGED IN AS ADMIN");
-                document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
-                renderRoster();
-            } else {
-                closeModal('loginModal');
-                triggerJumpscare();
-            }
-        }
-
-        function logoutAdmin() {
-            isAdmin = false;
-            document.getElementById('adminPanel').classList.add('hidden');
-            document.getElementById('navAdmin').innerHTML = '<i class="fas fa-user-shield"></i> ADMIN';
-            showToast("LOGGED OUT");
-            renderRoster();
-        }
-
-        function triggerJumpscare() {
-            const container = document.getElementById('video-jumpscare');
-            container.innerHTML = `<iframe src="https://www.youtube.com/embed/u8UdAAX_n28?autoplay=1&controls=0&start=13&mute=0" allow="autoplay"></iframe>`;
-            container.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-            setTimeout(() => {
-                container.style.display = 'none';
-                container.innerHTML = '';
-                document.body.style.overflow = 'auto';
-            }, 4000);
-        }
-
-        function showToast(m) {
-            const t = document.createElement('div'); t.className = 'toast fade-in';
-            t.innerText = m; document.body.appendChild(t);
-            setTimeout(() => t.remove(), 3000);
-        }
-
-        // Realtime Listener from Firebase
-        function initRealtimeRoster() {
-            try {
-                localStorage.removeItem('pedstyle_clean_roster');
-                localStorage.removeItem('pedstyle_roster');
-                localStorage.removeItem('pedstyle_official_roster');
-            } catch (e) { }
-
-            db.ref('roster').on('value', snap => {
-                const data = snap.val();
-                currentRoster = data || {};
-                displayRosterData(currentRoster);
-            }, err => {
-                console.log("Firebase error:", err);
-                displayRosterData({});
-            });
-        }
-
-        function renderRoster() {
-            displayRosterData(currentRoster);
-        }
-
-        function displayRosterData(data) {
-            const lists = { founder: 'founderList', leader: 'leaderList', member: 'memberList' };
-            const sections = { founder: 'section-founder', leader: 'section-leader', member: 'section-member' };
-            const counts = { founder: 'countFounder', leader: 'countLeader', member: 'countMember' };
-            const countCounters = { founder: 0, leader: 0, member: 0 };
-
-            Object.values(lists).forEach(id => document.getElementById(id).innerHTML = "");
-            Object.values(sections).forEach(id => document.getElementById(id).classList.add('hidden'));
-
-            let totalCount = 0;
-
-            if (data && Object.keys(data).length > 0) {
-                Object.keys(data).forEach(id => {
-                    const item = data[id];
-                    const role = item.role || 'member';
-                    if (!lists[role]) return;
-
-                    totalCount++;
-                    countCounters[role]++;
-
-                    const displayImg = (item.img && item.img.trim() !== "") ? item.img : "logo.png";
-                    const card = document.createElement('div');
-                    card.className = `member-card card-role-${role} fade-in`;
-
-                    const fbHTML = item.fb ? `<a href="${item.fb}" target="_blank" class="card-social-btn" title="Facebook"><i class="fab fa-facebook-f"></i></a>` : '';
-                    const roleIcon = (role === 'member') ? 'fa-users' : 'fa-crown';
-
-                    card.innerHTML = `
-                        <div style="width: 100%;">
-                            <div style="display: flex; align-items: center; justify-content: space-between;">
-                                <div class="card-main">
-                                    <div class="avatar-wrap">
-                                        <img src="${displayImg}" alt="${item.name}" class="card-avatar" onerror="this.src='logo.png'">
-                                        <span class="status-dot"></span>
-                                    </div>
-                                    <div class="card-info">
-                                        <div class="card-name">${item.name}</div>
-                                        <div class="card-role-badge">${role.toUpperCase()}</div>
-                                    </div>
-                                </div>
-
-                                <div class="card-actions">
-                                    <i class="fa-solid ${roleIcon} role-crown"></i>
-                                    <div class="social-btns">
-                                        ${fbHTML}
-                                    </div>
-                                </div>
-                            </div>
-
-                            ${isAdmin ? `
-                            <div class="admin-mini-controls">
-                                <button class="mini-btn" onclick="prepareEdit('${id}', '${item.name.replace(/'/g, "\\'")}', '${(item.fb || '').replace(/'/g, "\\'")}', '${(item.img || '').replace(/'/g, "\\'")}', '${role}')"><i class="fas fa-edit"></i> แก้ไข</button>
-                                <button class="mini-btn" style="color: #ff6b81;" onclick="askDeleteMember('${id}', '${item.name.replace(/'/g, "\\'")}')"><i class="fas fa-trash"></i> ลบ</button>
-                            </div>` : ''}
-                        </div>
-                    `;
-
-                    document.getElementById(lists[role]).appendChild(card);
-                    document.getElementById(sections[role]).classList.remove('hidden');
-                });
-            }
-
-            const emptyNotice = document.getElementById('emptyNotice');
-            if (emptyNotice) {
-                if (totalCount === 0) emptyNotice.classList.remove('hidden');
-                else emptyNotice.classList.add('hidden');
-            }
-
-            Object.keys(countCounters).forEach(r => {
-                if (document.getElementById(counts[r])) {
-                    document.getElementById(counts[r]).innerText = `[${countCounters[r]}]`;
-                }
-            });
-        }
-
-        function saveMember() {
-            if (!isAdmin) return;
-            const id = document.getElementById('editMemberId').value;
-            const nameVal = document.getElementById('newName').value.trim();
-            const fbVal = document.getElementById('newFB').value.trim();
-            const imgVal = document.getElementById('newImg').value.trim();
-            const roleVal = document.getElementById('newRole').value;
-
-            if (!nameVal) return showToast("กรุณาใส่ชื่อสมาชิก");
-            if (!fbVal) return showToast("กรุณาใส่ลิงก์ Facebook");
-
-            const data = {
-                name: nameVal,
-                fb: fbVal,
-                img: imgVal || "logo.png",
-                role: roleVal
-            };
-
-            const targetId = id || ('m_' + Date.now());
-
-            db.ref('roster/' + targetId).set(data).then(() => {
-                showToast(id ? "อัปเดตข้อมูลแบบ Realtime สำเร็จ!" : "เพิ่มสมาชิกแบบ Realtime สำเร็จ!");
-                resetForm();
-            }).catch(e => {
-                showToast("บันทึกไม่สำเร็จ: " + e.message);
-            });
-        }
-
-        function askDeleteMember(id, name) {
-            deleteTargetId = id;
-            document.getElementById('deleteMemberName').innerText = `คุณต้องการลบ "${name}" ใช่หรือไม่?`;
-            document.getElementById('confirmModal').style.display = 'flex';
-        }
-
-        function confirmDeleteMember() {
-            if (deleteTargetId) {
-                db.ref('roster/' + deleteTargetId).remove().then(() => {
-                    showToast("ลบข้อมูลแบบ Realtime สำเร็จ!");
-                    closeModal('confirmModal');
-                }).catch(e => {
-                    showToast("ลบไม่สำเร็จ: " + e.message);
-                });
-            }
-        }
-
-        document.getElementById('confirmDeleteBtn').onclick = confirmDeleteMember;
-
-        function prepareEdit(id, name, fb, img, role) {
-            document.getElementById('editMemberId').value = id;
-            document.getElementById('newName').value = name;
-            document.getElementById('newFB').value = (fb === '#') ? '' : fb;
-            document.getElementById('newImg').value = (img === 'logo.png') ? '' : (img || '');
-            document.getElementById('newRole').value = role;
-            document.getElementById('saveBtn').innerHTML = "<i class='fas fa-save'></i> UPDATE DATA";
-            document.getElementById('adminPanel').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function resetForm() {
-            document.getElementById('editMemberId').value = "";
-            document.getElementById('newName').value = "";
-            document.getElementById('newFB').value = "";
-            document.getElementById('newImg').value = "";
-            document.getElementById('saveBtn').innerHTML = "<i class='fas fa-check'></i> SAVE DATA";
-        }
-
-        // Initialize Realtime Sync
-        initRealtimeRoster();
-
-        // -------------------------------------------------------------
-        // 🎵 YOUTUBE MUSIC PLAYER & VINYL CONTROLS
-        // -------------------------------------------------------------
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player;
-        var videoId = 'f1r0XZLNlGQ'; // The Weeknd, JENNIE & Lily Rose Depp - One Of The Girls
-
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '0',
-                width: '0',
-                videoId: videoId,
-                playerVars: {
-                    'autoplay': 1,
-                    'loop': 1,
-                    'playlist': videoId,
-                    'controls': 0,
-                    'showinfo': 0,
-                    'modestbranding': 1,
-                    'iv_load_policy': 3
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            updateTitle();
-            if (player && typeof player.playVideo === 'function') {
-                player.unMute();
-                player.setVolume(80);
-                player.playVideo();
-            }
-        }
-
-        function updateTitle() {
-            try {
-                const videoData = player.getVideoData();
-                if (videoData && videoData.title) {
-                    document.getElementById('music-title').innerText = videoData.title;
-                } else {
-                    document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
-                }
-            } catch (e) {
-                document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
-            }
-        }
-
-        function onPlayerStateChange(event) {
-            const icon = document.getElementById('play-icon');
-            const cont = document.getElementById('player-container');
-            const status = document.getElementById('music-status');
-
-            // 1 = Playing, 2 = Paused
-            if (event.data == YT.PlayerState.PLAYING) {
-                icon.className = 'fas fa-pause vinyl-action-icon';
-                cont.classList.add('playing');
-                if (status) status.innerText = "NOW PLAYING";
-                updateTitle();
-            } else {
-                icon.className = 'fas fa-play vinyl-action-icon';
-                cont.classList.remove('playing');
-                if (status) status.innerText = "PAUSED";
-            }
-        }
-
-        // -------------------------------------------------------------
-        // 🔊 VOLUME CONTROL SYSTEM (เพิ่มเสียง / ลดเสียง / ปิดเสียง)
-        // -------------------------------------------------------------
         let currentVolume = 80;
         let isMuted = false;
+        let isPlaying = false;
+
+        audio.volume = currentVolume / 100;
+
+        function updatePlayerUI(playing) {
+            isPlaying = playing;
+            const container = document.getElementById('player-container');
+            const playIcon = document.getElementById('play-icon');
+            const musicStatus = document.getElementById('music-status');
+
+            if (playing) {
+                container.classList.add('playing');
+                playIcon.className = 'fas fa-pause vinyl-action-icon';
+                if (musicStatus) musicStatus.innerText = 'NOW PLAYING';
+            } else {
+                container.classList.remove('playing');
+                playIcon.className = 'fas fa-play vinyl-action-icon';
+                if (musicStatus) musicStatus.innerText = 'PAUSED';
+            }
+        }
+
+        function togglePlay() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    updatePlayerUI(true);
+                }).catch(e => {
+                    console.log("Audio play request error:", e);
+                });
+            } else {
+                audio.pause();
+                updatePlayerUI(false);
+            }
+        }
 
         function changeVolume(val) {
-            currentVolume = parseInt(val);
-            if (player && typeof player.setVolume === 'function') {
-                if (currentVolume === 0) {
-                    player.mute();
-                    isMuted = true;
-                    updateVolumeIcon(0);
-                } else {
-                    if (isMuted) {
-                        player.unMute();
-                        isMuted = false;
-                    }
-                    player.setVolume(currentVolume);
-                    updateVolumeIcon(currentVolume);
+            currentVolume = parseInt(val, 10);
+            if (currentVolume === 0) {
+                audio.muted = true;
+                isMuted = true;
+                updateVolumeIcon(0);
+            } else {
+                if (isMuted) {
+                    audio.muted = false;
+                    isMuted = false;
                 }
+                audio.volume = currentVolume / 100;
+                updateVolumeIcon(currentVolume);
             }
             document.getElementById('vol-text').innerText = currentVolume + '%';
         }
 
         function toggleMute(e) {
             if (e) e.stopPropagation();
-            if (!player) return;
-
             if (isMuted) {
-                player.unMute();
+                audio.muted = false;
                 isMuted = false;
                 const restoreVol = currentVolume > 0 ? currentVolume : 80;
-                player.setVolume(restoreVol);
+                currentVolume = restoreVol;
+                audio.volume = restoreVol / 100;
                 document.getElementById('vol-slider').value = restoreVol;
                 document.getElementById('vol-text').innerText = restoreVol + '%';
                 updateVolumeIcon(restoreVol);
             } else {
-                player.mute();
+                audio.muted = true;
                 isMuted = true;
                 document.getElementById('vol-slider').value = 0;
                 document.getElementById('vol-text').innerText = '0%';
@@ -1674,37 +1377,39 @@
             else icon.className = 'fas fa-volume-high vol-btn-icon';
         }
 
-        // ปุ่มคลิกที่แผ่นเสียง Play / Pause
+        // Attach Click to Vinyl Disc
         document.getElementById('master-play').addEventListener('click', function (e) {
-            // บนมือถือ ให้เปิด/ปิดกล่องปรับเสียงได้ด้วย
             const infoBox = document.getElementById('vinylInfoBox');
             if (window.innerWidth <= 768 && infoBox) {
                 infoBox.classList.toggle('active');
             }
-
-            if (!player || typeof player.getPlayerState !== 'function') return;
-            const state = player.getPlayerState();
-            if (state == YT.PlayerState.PLAYING) {
-                player.pauseVideo();
-            } else {
-                player.playVideo();
-            }
+            togglePlay();
         });
 
-        // Autoplay on first click anywhere if blocked by browser policy
-        document.addEventListener('click', function initAudioOnInteraction() {
-            if (player && typeof player.getPlayerState === 'function') {
-                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                    player.unMute();
-                    player.setVolume(currentVolume);
-                    player.playVideo();
-                }
-            }
-            document.removeEventListener('click', initAudioOnInteraction);
-        }, { once: true });
+        // Audio state listeners
+        audio.addEventListener('play', () => updatePlayerUI(true));
+        audio.addEventListener('pause', () => updatePlayerUI(false));
 
-        // ป้องกันการคลิกขวา
-        document.addEventListener('contextmenu', event => event.preventDefault());
+        // Auto-play on first user interaction anywhere on the page
+        function initAudioOnFirstGesture() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    updatePlayerUI(true);
+                }).catch(() => { });
+            }
+            document.removeEventListener('click', initAudioOnFirstGesture);
+            document.removeEventListener('keydown', initAudioOnFirstGesture);
+        }
+        document.addEventListener('click', initAudioOnFirstGesture, { once: true });
+        document.addEventListener('keydown', initAudioOnFirstGesture, { once: true });
+
+        // Initial setup
+        window.addEventListener('DOMContentLoaded', () => {
+            renderRoster();
+            if (window.location.hash === '#members') {
+                navigateTo('members');
+            }
+        });
     </script>
 </body>
 
