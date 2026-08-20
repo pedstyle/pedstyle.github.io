@@ -205,45 +205,153 @@
         .btn-text-main { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: #fff; pointer-events: none; }
         .btn-text-sub { font-size: 0.5rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); margin-top: 5px; pointer-events: none; }
 
-        /* --- Music Player --- */
-        .music-player {
+        /* --- Floating Vinyl Music Player (Right Side) --- */
+        .vinyl-player-wrapper {
             position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 300px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 12px;
+            bottom: 35px;
+            right: 35px;
+            z-index: 1000;
             display: flex;
             align-items: center;
-            z-index: 1000;
+            gap: 15px;
             opacity: 0;
-            transition: all 1s ease 1s;
+            transform: translateX(30px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1) 0.8s;
         }
-        body.loaded .music-player { opacity: 1; }
+        body.loaded .vinyl-player-wrapper {
+            opacity: 1;
+            transform: translateX(0);
+        }
 
-        .album-art {
-            width: 50px; height: 50px; border-radius: 12px;
-            overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
-            flex-shrink: 0;
+        .vinyl-info-box {
+            background: rgba(12, 12, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 14px;
+            max-width: 220px;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .playing .album-art { animation: pulseArt 2s infinite ease-in-out; }
-        @keyframes pulseArt { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .album-art img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .player-controls-mini { flex-grow: 1; margin-left: 15px; overflow: hidden; }
-        .music-title-mini {
-            font-size: 0.6rem; color: rgba(255,255,255,0.9);
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            margin-bottom: 6px; font-family: 'Inter', sans-serif;
+        .vinyl-player-wrapper:hover .vinyl-info-box {
+            opacity: 1;
+            transform: translateX(0);
         }
-        .ctrl-btns { display: flex; align-items: center; gap: 20px; }
-        .play-btn { background: none; border: none; color: #fff; font-size: 0.9rem; cursor: pointer; opacity: 0.7; transition: 0.3s; }
-        .play-btn:hover { opacity: 1; transform: scale(1.1); }
+        .vinyl-song-title {
+            font-size: 0.65rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        .vinyl-status {
+            font-size: 0.5rem;
+            color: rgba(255,255,255,0.4);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        /* Vinyl Disc Record */
+        .vinyl-disc {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle, #080808 30%, #181818 32%, #080808 35%, #1c1c1c 38%, #080808 42%, #181818 46%, #080808 50%, #1c1c1c 55%, #080808 60%, #151515 65%, #080808 70%),
+                #111;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.05);
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            user-select: none;
+        }
+        .vinyl-disc:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.25);
+        }
+
+        /* Spinning Animation */
+        .vinyl-disc-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: rotateVinyl 6s linear infinite;
+            animation-play-state: paused;
+            position: relative;
+        }
+        .playing .vinyl-disc-inner {
+            animation-play-state: running;
+        }
+        .playing .vinyl-disc {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes rotateVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Center Album Art Label */
+        .vinyl-label {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 8px rgba(0,0,0,0.8);
+        }
+        .vinyl-label img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Center Spindle Hole */
+        .vinyl-center-hole {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border: 1.5px solid #fff;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        /* Play / Pause overlay icon on hover */
+        .vinyl-action-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 0.9rem;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            filter: drop-shadow(0 0 6px rgba(0,0,0,0.9));
+            pointer-events: none;
+        }
+        .vinyl-disc:hover .vinyl-action-icon {
+            opacity: 1;
+        }
 
         footer {
             margin-top: 40px;
@@ -258,7 +366,21 @@
         @media (max-width: 480px) {
             h1 { letter-spacing: 8px; }
             .top-nav { width: 85%; }
-            .music-player { width: 280px; }
+            .vinyl-player-wrapper {
+                bottom: 20px;
+                right: 20px;
+            }
+            .vinyl-disc {
+                width: 65px;
+                height: 65px;
+            }
+            .vinyl-label {
+                width: 30px;
+                height: 30px;
+            }
+            .vinyl-info-box {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -303,20 +425,21 @@
         </footer>
     </div>
 
-    <!-- Music Player -->
-    <div class="music-player" id="player-container">
-        <div class="album-art">
-            <img src="https://img.youtube.com/vi/JcEeQh4Ov4M/maxresdefault.jpg" alt="Cover" id="music-cover">
+    <!-- Vinyl Music Player (Right Side) -->
+    <div class="vinyl-player-wrapper" id="player-container">
+        <div class="vinyl-info-box">
+            <div class="vinyl-song-title" id="music-title">Initializing...</div>
+            <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY/PAUSE</div>
         </div>
-        <div class="player-controls-mini">
-            <div class="music-title-mini" id="music-title">Initializing...</div>
-            <div class="ctrl-btns">
-                <i class="fas fa-step-backward play-btn"></i>
-                <button class="play-btn" id="master-play" aria-label="Play/Pause">
-                    <i class="fas fa-play" id="play-icon"></i>
-                </button>
-                <i class="fas fa-step-forward play-btn"></i>
+
+        <div class="vinyl-disc" id="master-play" title="Click to Play / Pause">
+            <div class="vinyl-disc-inner">
+                <div class="vinyl-label">
+                    <img src="https://img.youtube.com/vi/JcEeQh4Ov4M/maxresdefault.jpg" alt="Cover" id="music-cover">
+                </div>
+                <div class="vinyl-center-hole"></div>
             </div>
+            <i class="fas fa-play vinyl-action-icon" id="play-icon"></i>
         </div>
     </div>
 
@@ -386,15 +509,18 @@
         function onPlayerStateChange(event) {
             const icon = document.getElementById('play-icon');
             const cont = document.getElementById('player-container');
+            const status = document.getElementById('music-status');
             
             // 1 = Playing, 2 = Paused
             if (event.data == YT.PlayerState.PLAYING) {
-                icon.className = 'fas fa-pause';
+                icon.className = 'fas fa-pause vinyl-action-icon';
                 cont.classList.add('playing');
+                if (status) status.innerText = "NOW PLAYING";
                 updateTitle();
             } else {
-                icon.className = 'fas fa-play';
+                icon.className = 'fas fa-play vinyl-action-icon';
                 cont.classList.remove('playing');
+                if (status) status.innerText = "PAUSED";
             }
         }
 
