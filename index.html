@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PEDSTYLE - MEMBERS</title>
+    <title>PEDSTYLE</title>
     
     <link rel="icon" type="image/png" href="logo.png">
     
@@ -60,7 +60,133 @@
             pointer-events: none;
         }
 
-        /* --- Top Navigation --- */
+        /* --- SPA Views --- */
+        .spa-view {
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%;
+        }
+        .spa-view.hidden-view {
+            display: none !important;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        /* ================================================= */
+        /* --- 🏠 VIEW 1: HOME LANDING SCREEN --- */
+        /* ================================================= */
+        #view-home {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .top-nav-home {
+            position: fixed;
+            top: 25px;
+            width: 90%;
+            max-width: 500px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .nav-logo img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
+        .nav-text { font-family: 'Orbitron', sans-serif; font-size: 0.6rem; color: rgba(255,255,255,0.5); letter-spacing: 2px; }
+
+        .home-container {
+            text-align: center;
+            width: 100%;
+            padding: 0 30px;
+            margin-top: -30px;
+        }
+
+        .home-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.4rem, 8vw, 4.5rem);
+            font-weight: 700;
+            letter-spacing: 15px;
+            margin-bottom: 10px;
+            background: linear-gradient(180deg, #fff 0%, #777 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2));
+        }
+
+        .home-subtext {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 5px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 45px;
+            text-transform: uppercase;
+        }
+
+        .btn-enter-member {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 280px;
+            height: 75px;
+            text-decoration: none;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+        }
+        .btn-enter-member:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+        .btn-text-main { font-family: 'Orbitron', sans-serif; font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: #fff; }
+        .btn-text-sub { font-size: 0.5rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); margin-top: 5px; }
+
+        .home-footer {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.2);
+            letter-spacing: 3px;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        /* ================================================= */
+        /* --- 👥 VIEW 2: MEMBERS ROSTER SCREEN --- */
+        /* ================================================= */
+        #view-members {
+            min-height: 100vh;
+        }
+
         nav.member-nav { 
             display: flex; justify-content: space-between; padding: 18px 6%; 
             background: rgba(10, 10, 14, 0.85); align-items: center; position: sticky; 
@@ -639,6 +765,8 @@
             .roster-grid { grid-template-columns: 1fr; }
             nav.member-nav { padding: 15px 4%; }
             #brand-name { font-size: 0.95rem; }
+            .home-title { letter-spacing: 8px; }
+            .top-nav-home { width: 85%; }
             .vinyl-player-wrapper {
                 bottom: 20px;
                 right: 20px;
@@ -672,115 +800,151 @@
     <div class="bg-wrapper"></div>
     <div class="vignette"></div>
 
-    <!-- Top Navigation -->
-    <nav class="member-nav">
-        <div id="brand-name">
-            <img src="logo.png" alt="logo">
-            PEDSTYLE 2K26
-        </div>
-        <div style="display: flex; gap: 10px;">
-            <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i> ADMIN</button>
-        </div>
-    </nav>
-
-    <div class="member-container">
-        <!-- Hero Header Title -->
-        <div class="page-hero-header">
-            <h1 class="hero-title">PEDSTYLE</h1>
-            <div class="hero-subtext">THE OFFICIAL MEMBERS ROSTER</div>
+    <!-- ========================================== -->
+    <!-- 🏠 VIEW 1: HOME LANDING SCREEN             -->
+    <!-- ========================================== -->
+    <div id="view-home" class="spa-view">
+        <div class="top-nav-home">
+            <a href="#" class="nav-logo">
+                <img src="logo.png" alt="icon">
+                PEDSTYLE
+            </a>
+            <div class="nav-text">V.2026.1</div>
         </div>
 
-        <!-- Admin Management Panel -->
-        <div id="adminPanel" class="hidden">
-            <div class="glass-panel">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="color: #fff; font-family: 'Orbitron'; font-size: 1.1rem;"><i class="fas fa-user-plus"></i> ADD / EDIT MEMBER</h3>
-                    <button onclick="logoutAdmin()" class="btn-action btn-secondary" style="font-size: 0.75rem;"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
-                </div>
+        <div class="home-container">
+            <h1 class="home-title">PEDSTYLE</h1> 
+            <div class="home-subtext">The Original Legacy Member</div>
 
-                <div class="admin-grid" style="margin-bottom: 20px;">
-                    <input type="hidden" id="editMemberId">
-                    
-                    <div class="input-group">
-                        <label>ชื่อสมาชิก *</label>
-                        <input type="text" id="newName" placeholder="ใส่ชื่อสมาชิก..." onkeydown="if(event.key === 'Enter') saveMember()">
-                    </div>
-
-                    <div class="input-group">
-                        <label>ลิงก์ Facebook (URL) *</label>
-                        <input type="text" id="newFB" placeholder="https://facebook.com/..." onkeydown="if(event.key === 'Enter') saveMember()">
-                    </div>
-
-                    <div class="input-group">
-                        <label>ลิงก์รูปโปรไฟล์ (URL) - เว้นว่างได้</label>
-                        <input type="text" id="newImg" placeholder="https://.../photo.png" onkeydown="if(event.key === 'Enter') saveMember()">
-                    </div>
-
-                    <div class="input-group">
-                        <label>ตำแหน่ง (Role) *</label>
-                        <select id="newRole">
-                            <option value="leader">Leader (กรอบแดง)</option>
-                            <option value="founder">Founder (กรอบทอง)</option>
-                            <option value="member">Member (กรอบเทาแสง)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 10px;">
-                    <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE DATA</button>
-                    <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
-                </div>
+            <div class="button-group">
+                <button onclick="navigateTo('members')" class="btn-enter-member">
+                    <span class="btn-text-main">MEMBER ENTER</span>
+                    <span class="btn-text-sub">MEMBER 2K26</span>
+                </button>
             </div>
         </div>
 
-        <!-- Roster Display Sections -->
-        <div id="rosterDisplay">
-            <!-- FOUNDERS -->
-            <div id="section-founder" class="hidden">
-                <div class="section-header">
-                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
-                    <div class="section-title-badge" style="color: #f3d48b; text-shadow: 0 0 12px rgba(243, 212, 139, 0.4);">
-                        <i class="fa-solid fa-crown header-icon" style="color: #f3d48b;"></i>
-                        <span id="titleFounder">FOUNDERS</span>
-                        <span class="section-count" id="countFounder">[0]</span>
-                    </div>
-                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
-                </div>
-                <div class="roster-grid" id="founderList"></div>
+        <footer class="home-footer">
+            &copy; 2K26 SYSTEM BY PEDSTYLE
+        </footer>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- 👥 VIEW 2: MEMBERS ROSTER SCREEN           -->
+    <!-- ========================================== -->
+    <div id="view-members" class="spa-view hidden-view">
+        <!-- Top Navigation -->
+        <nav class="member-nav">
+            <div id="brand-name">
+                <img src="logo.png" alt="logo">
+                PEDSTYLE 2K26
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
+                <button onclick="navigateTo('home')" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
+                <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i> ADMIN</button>
+            </div>
+        </nav>
+
+        <div class="member-container">
+            <!-- Hero Header Title -->
+            <div class="page-hero-header">
+                <h1 class="hero-title">PEDSTYLE</h1>
+                <div class="hero-subtext">THE OFFICIAL MEMBERS ROSTER</div>
             </div>
 
-            <!-- LEADERS -->
-            <div id="section-leader" class="hidden">
-                <div class="section-header">
-                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
-                    <div class="section-title-badge" style="color: #ff4757; text-shadow: 0 0 12px rgba(255, 71, 87, 0.4);">
-                        <i class="fa-solid fa-crown header-icon" style="color: #ff4757;"></i>
-                        <span id="titleLeader">LEADERS</span>
-                        <span class="section-count" id="countLeader">[0]</span>
+            <!-- Admin Management Panel -->
+            <div id="adminPanel" class="hidden">
+                <div class="glass-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3 style="color: #fff; font-family: 'Orbitron'; font-size: 1.1rem;"><i class="fas fa-user-plus"></i> ADD / EDIT MEMBER</h3>
+                        <button onclick="logoutAdmin()" class="btn-action btn-secondary" style="font-size: 0.75rem;"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
                     </div>
-                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+
+                    <div class="admin-grid" style="margin-bottom: 20px;">
+                        <input type="hidden" id="editMemberId">
+                        
+                        <div class="input-group">
+                            <label>ชื่อสมาชิก *</label>
+                            <input type="text" id="newName" placeholder="ใส่ชื่อสมาชิก..." onkeydown="if(event.key === 'Enter') saveMember()">
+                        </div>
+
+                        <div class="input-group">
+                            <label>ลิงก์ Facebook (URL) *</label>
+                            <input type="text" id="newFB" placeholder="https://facebook.com/..." onkeydown="if(event.key === 'Enter') saveMember()">
+                        </div>
+
+                        <div class="input-group">
+                            <label>ลิงก์รูปโปรไฟล์ (URL) - เว้นว่างได้</label>
+                            <input type="text" id="newImg" placeholder="https://.../photo.png" onkeydown="if(event.key === 'Enter') saveMember()">
+                        </div>
+
+                        <div class="input-group">
+                            <label>ตำแหน่ง (Role) *</label>
+                            <select id="newRole">
+                                <option value="leader">Leader (กรอบแดง)</option>
+                                <option value="founder">Founder (กรอบทอง)</option>
+                                <option value="member">Member (กรอบเทาแสง)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE DATA</button>
+                        <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
+                    </div>
                 </div>
-                <div class="roster-grid" id="leaderList"></div>
             </div>
 
-            <!-- MEMBERS -->
-            <div id="section-member" class="hidden">
-                <div class="section-header">
-                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
-                    <div class="section-title-badge" style="color: #e4e7eb; text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);">
-                        <i class="fa-solid fa-users header-icon" style="color: #e4e7eb;"></i>
-                        <span id="titleMember">MEMBERS</span>
-                        <span class="section-count" id="countMember">[0]</span>
+            <!-- Roster Display Sections -->
+            <div id="rosterDisplay">
+                <!-- FOUNDERS -->
+                <div id="section-founder" class="hidden">
+                    <div class="section-header">
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
+                        <div class="section-title-badge" style="color: #f3d48b; text-shadow: 0 0 12px rgba(243, 212, 139, 0.4);">
+                            <i class="fa-solid fa-crown header-icon" style="color: #f3d48b;"></i>
+                            <span id="titleFounder">FOUNDERS</span>
+                            <span class="section-count" id="countFounder">[0]</span>
+                        </div>
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(243, 212, 139, 0.4), transparent);"></span>
                     </div>
-                    <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                    <div class="roster-grid" id="founderList"></div>
                 </div>
-                <div class="roster-grid" id="memberList"></div>
-            </div>
 
-            <div id="emptyNotice" class="empty-placeholder hidden">
-                <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.35;"></i>
-                <p style="font-weight: 500;">ยังไม่มีรายชื่อสมาชิก</p>
-                <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">(กดปุ่ม <b>ADMIN</b> ด้านบน ใส่รหัส <code>adminpedboys</code> เพื่อเริ่มเพิ่มสมาชิก)</p>
+                <!-- LEADERS -->
+                <div id="section-leader" class="hidden">
+                    <div class="section-header">
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                        <div class="section-title-badge" style="color: #ff4757; text-shadow: 0 0 12px rgba(255, 71, 87, 0.4);">
+                            <i class="fa-solid fa-crown header-icon" style="color: #ff4757;"></i>
+                            <span id="titleLeader">LEADERS</span>
+                            <span class="section-count" id="countLeader">[0]</span>
+                        </div>
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.4), transparent);"></span>
+                    </div>
+                    <div class="roster-grid" id="leaderList"></div>
+                </div>
+
+                <!-- MEMBERS -->
+                <div id="section-member" class="hidden">
+                    <div class="section-header">
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                        <div class="section-title-badge" style="color: #e4e7eb; text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);">
+                            <i class="fa-solid fa-users header-icon" style="color: #e4e7eb;"></i>
+                            <span id="titleMember">MEMBERS</span>
+                            <span class="section-count" id="countMember">[0]</span>
+                        </div>
+                        <span class="header-line" style="background: linear-gradient(90deg, transparent, rgba(220, 225, 240, 0.4), transparent);"></span>
+                    </div>
+                    <div class="roster-grid" id="memberList"></div>
+                </div>
+
+                <div id="emptyNotice" class="empty-placeholder hidden">
+                    <i class="fas fa-user-shield" style="font-size: 2.5rem; margin-bottom: 15px; opacity: 0.35;"></i>
+                    <p style="font-weight: 500;">ยังไม่มีรายชื่อสมาชิก</p>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 5px;">(กดปุ่ม <b>ADMIN</b> ด้านบน ใส่รหัส <code>adminpedboys</code> เพื่อเริ่มเพิ่มสมาชิก)</p>
+                </div>
             </div>
         </div>
     </div>
@@ -839,6 +1003,42 @@
     <div id="youtube-player"></div>
 
     <script>
+        // -------------------------------------------------------------
+        // 🌟 SEAMLESS SPA PAGE NAVIGATION (MUSIC NEVER INTERRUPTED)
+        // -------------------------------------------------------------
+        function navigateTo(targetView) {
+            // Trigger song play immediately upon entering member roster
+            if (player && typeof player.playVideo === 'function') {
+                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                    player.unMute();
+                    player.setVolume(currentVolume);
+                    player.playVideo();
+                }
+            }
+
+            const homeView = document.getElementById('view-home');
+            const membersView = document.getElementById('view-members');
+
+            if (targetView === 'members') {
+                homeView.classList.add('hidden-view');
+                membersView.classList.remove('hidden-view');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                history.replaceState(null, '', '#members');
+            } else {
+                membersView.classList.add('hidden-view');
+                homeView.classList.remove('hidden-view');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                history.replaceState(null, '', '#home');
+            }
+        }
+
+        // Check hash on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.location.hash === '#members') {
+                navigateTo('members');
+            }
+        });
+
         // -------------------------------------------------------------
         // 🌟 PEDSTYLE OFFICIAL FIREBASE REALTIME DATABASE CONFIGURATION
         // -------------------------------------------------------------
@@ -1108,7 +1308,6 @@
             if (player && typeof player.playVideo === 'function') {
                 player.unMute();
                 player.setVolume(80);
-                player.seekTo(0, true);
                 player.playVideo();
             }
         }
@@ -1215,7 +1414,7 @@
             }
         });
 
-        // Autoplay on first user interaction if blocked by browser policy
+        // Autoplay on first click anywhere if blocked by browser policy
         document.addEventListener('click', function initAudioOnInteraction() {
             if (player && typeof player.getPlayerState === 'function') {
                 if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
