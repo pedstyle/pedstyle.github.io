@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK (Like original prototype) -->
+    <!-- Firebase Realtime Database SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
@@ -405,18 +405,6 @@
             font-size: 0.95rem;
         }
 
-        .db-config-box {
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            text-align: left;
-        }
-
         @media (max-width: 768px) {
             .roster-grid { grid-template-columns: 1fr; }
             nav { padding: 15px 4%; }
@@ -512,18 +500,6 @@
                     <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE DATA</button>
                     <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
                 </div>
-
-                <!-- Optional Firebase Online Database Setup -->
-                <div class="db-config-box">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <label style="font-size: 0.85rem; font-weight: 600; color: #f3d48b;"><i class="fas fa-database"></i> Firebase Realtime Database URL (สำหรับให้คนอื่นเห็นแบบ Real-time):</label>
-                    </div>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="fbUrlInput" placeholder="https://your-project-default-rtdb.asia-southeast1.firebasedatabase.app/">
-                        <button onclick="saveDbUrl()" class="btn-action" style="font-size: 0.75rem; white-space: nowrap;"><i class="fas fa-link"></i> CONNECT</button>
-                    </div>
-                    <small style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">* ใส่ลิงก์ฐานข้อมูล Firebase ของคุณเพียงครั้งเดียว ข้อมูลจะออนไลน์ให้ทุกคนในโลกเห็นพร้อมกันทันที</small>
-                </div>
             </div>
         </div>
 
@@ -580,61 +556,18 @@
     </div>
 
     <script>
-        const LOCAL_STORAGE_KEY = "pedstyle_clean_roster";
-        const FIREBASE_URL_KEY = "pedstyle_fb_url";
-        
-        let db = null;
+        // -------------------------------------------------------------
+        // 🌟 PEDSTYLE OFFICIAL FIREBASE REALTIME DATABASE CONFIGURATION
+        // -------------------------------------------------------------
+        const firebaseConfig = {
+            databaseURL: "https://pedstyle-21005-default-rtdb.asia-southeast1.firebasedatabase.app/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         let isAdmin = false;
         let deleteTargetId = null;
         let currentRoster = {};
-
-        // Initialize Firebase if configured
-        function initFirebase(url) {
-            if (!url) {
-                url = localStorage.getItem(FIREBASE_URL_KEY);
-            }
-            if (url) {
-                try {
-                    if (firebase.apps.length > 0) {
-                        firebase.app().delete();
-                    }
-                    firebase.initializeApp({ databaseURL: url });
-                    db = firebase.database();
-                    document.getElementById('fbUrlInput').value = url;
-                    
-                    // Realtime listener
-                    db.ref('roster').on('value', snap => {
-                        const val = snap.val();
-                        if (val) {
-                            currentRoster = val;
-                            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
-                            displayRosterData(currentRoster);
-                        }
-                    });
-                    console.log("Firebase connected successfully to:", url);
-                    return true;
-                } catch(e) {
-                    console.log("Firebase init error:", e);
-                }
-            }
-            return false;
-        }
-
-        function saveDbUrl() {
-            const url = document.getElementById('fbUrlInput').value.trim();
-            if(!url) return showToast("กรุณาใส่ URL ของ Firebase");
-            localStorage.setItem(FIREBASE_URL_KEY, url);
-            const ok = initFirebase(url);
-            if(ok) {
-                showToast("เชื่อมต่อ Firebase Database สำเร็จ!");
-                // Push local data to firebase
-                if(Object.keys(currentRoster).length > 0 && db) {
-                    db.ref('roster').set(currentRoster);
-                }
-            } else {
-                showToast("เชื่อมต่อไม่สำเร็จ กรุณาตรวจสอบ URL");
-            }
-        }
 
         function openAdminModal() {
             if(isAdmin) {
@@ -690,10 +623,15 @@
             setTimeout(() => t.remove(), 3000);
         }
 
-        function loadRoster() {
-            const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
-            currentRoster = raw ? JSON.parse(raw) : {};
-            displayRosterData(currentRoster);
+        // Realtime Listener from Firebase (Updates automatically on all devices worldwide in real-time)
+        function initRealtimeRoster() {
+            db.ref('roster').on('value', snap => {
+                const data = snap.val();
+                currentRoster = data || {};
+                displayRosterData(currentRoster);
+            }, err => {
+                console.log("Firebase error:", err);
+            });
         }
 
         function renderRoster() {
@@ -797,18 +735,14 @@
             };
 
             const targetId = id || ('m_' + Date.now());
-            currentRoster[targetId] = data;
-
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
-
-            // Sync to Firebase if connected
-            if (db) {
-                db.ref('roster/' + targetId).set(data);
-            }
-
-            showToast(id ? "อัปเดตข้อมูลสำเร็จ!" : "เพิ่มสมาชิกสำเร็จ!");
-            resetForm();
-            displayRosterData(currentRoster);
+            
+            // Save directly to Firebase Realtime Database
+            db.ref('roster/' + targetId).set(data).then(() => {
+                showToast(id ? "อัปเดตข้อมูลแบบ Realtime สำเร็จ!" : "เพิ่มสมาชิกแบบ Realtime สำเร็จ!");
+                resetForm();
+            }).catch(e => {
+                showToast("บันทึกไม่สำเร็จ: " + e.message);
+            });
         }
 
         function askDeleteMember(id, name) {
@@ -819,16 +753,12 @@
 
         function confirmDeleteMember() {
             if(deleteTargetId) {
-                delete currentRoster[deleteTargetId];
-                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
-                
-                if (db) {
-                    db.ref('roster/' + deleteTargetId).remove();
-                }
-
-                showToast("ลบข้อมูลสำเร็จ!");
-                closeModal('confirmModal');
-                displayRosterData(currentRoster);
+                db.ref('roster/' + deleteTargetId).remove().then(() => {
+                    showToast("ลบข้อมูลแบบ Realtime สำเร็จ!");
+                    closeModal('confirmModal');
+                }).catch(e => {
+                    showToast("ลบไม่สำเร็จ: " + e.message);
+                });
             }
         }
 
@@ -852,9 +782,8 @@
             document.getElementById('saveBtn').innerHTML = "<i class='fas fa-check'></i> SAVE DATA";
         }
 
-        // Initialize Local + Firebase
-        loadRoster();
-        initFirebase();
+        // Initialize Realtime Sync
+        initRealtimeRoster();
     </script>
 </body>
 </html>
