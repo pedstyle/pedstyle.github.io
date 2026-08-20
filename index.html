@@ -448,6 +448,10 @@
     <div id="youtube-player"></div>
 
     <script>
+        // Check if returning from member.html
+        const urlParams = new URLSearchParams(window.location.search);
+        const fromMember = urlParams.get('from') === 'member';
+
         // โหลด YouTube IFrame API
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -492,53 +496,40 @@
             }
         }, 200);
 
-        // เริ่มเข้าสู่เว็บไซต์เมื่อคลิก Overlay
-        function startWebsite() {
-            sessionStorage.setItem('ped_entered', 'true');
-            document.body.classList.add('loaded');
-            const overlay = document.getElementById('overlay');
-            overlay.classList.add('fade-out');
-            
-            resumeOrPlayAudio();
-        }
-
-        function resumeOrPlayAudio() {
-            if (player && typeof player.playVideo === 'function') {
-                player.unMute();
-                player.setVolume(80);
-
-                const savedTime = parseFloat(localStorage.getItem('ped_music_time') || '0');
-                const wasPlaying = localStorage.getItem('ped_music_playing') !== 'false';
-                const lastStamp = parseInt(localStorage.getItem('ped_music_stamp') || '0');
-
-                let seekToTime = savedTime;
-                if (lastStamp > 0 && wasPlaying) {
-                    const elapsed = (Date.now() - lastStamp) / 1000;
-                    if (elapsed < 60) {
-                        seekToTime += elapsed;
-                    }
-                }
-
-                if (seekToTime > 1) {
-                    player.seekTo(seekToTime, true);
-                }
-                player.playVideo();
-            }
-        }
-
-        // Auto-resume if user already entered in this session
+        // Auto-resume if returning from member page
         window.addEventListener('DOMContentLoaded', () => {
-            if (sessionStorage.getItem('ped_entered') === 'true') {
+            if (fromMember) {
                 document.body.classList.add('loaded');
                 const overlay = document.getElementById('overlay');
                 if (overlay) overlay.classList.add('fade-out');
             }
         });
 
+        // เริ่มเข้าสู่เว็บไซต์เมื่อคลิก Overlay (เข้าใหม่ = เริ่มเพลงจาก 0:00)
+        function startWebsite() {
+            document.body.classList.add('loaded');
+            const overlay = document.getElementById('overlay');
+            overlay.classList.add('fade-out');
+            
+            if (player && typeof player.playVideo === 'function') {
+                player.unMute();
+                player.setVolume(80);
+                // เข้าใหม่ให้เพลงเริ่มจากต้นเพลง (0:00)
+                player.seekTo(0, true);
+                player.playVideo();
+            }
+        }
+
         function onPlayerReady(event) {
             updateTitle();
-            if (sessionStorage.getItem('ped_entered') === 'true') {
-                resumeOrPlayAudio();
+            if (fromMember && player && typeof player.playVideo === 'function') {
+                player.unMute();
+                player.setVolume(80);
+                const savedTime = parseFloat(localStorage.getItem('ped_music_time') || '0');
+                if (savedTime > 0) {
+                    player.seekTo(savedTime, true);
+                }
+                player.playVideo();
             }
         }
 

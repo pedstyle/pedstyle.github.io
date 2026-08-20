@@ -608,8 +608,8 @@
             PEDSTYLE 2K26
         </div>
         <div style="display: flex; gap: 10px;">
-            <button onclick="window.location.href='index.html'" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
-            <button onclick="window.location.href='index.html'" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
+            <button onclick="window.location.href='index.html?from=member'" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
+            <button onclick="window.location.href='index.html?from=member'" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
             <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i> ADMIN</button>
         </div>
     </nav>
@@ -974,7 +974,7 @@
         initRealtimeRoster();
 
         // -------------------------------------------------------------
-        // 🎵 YOUTUBE MUSIC PLAYER & VINYL CONTROLS
+        // 🎵 YOUTUBE MUSIC PLAYER & VINYL CONTROLS (SEAMLESS RESUME)
         // -------------------------------------------------------------
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
