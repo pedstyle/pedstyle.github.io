@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&family=Kanit:wght@200;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Firebase SDK (Like original prototype) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
     <style>
         :root {
             --primary: #ffffff;
@@ -123,8 +127,6 @@
         .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
         .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--border-color); }
         .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
-        .btn-gold { background: #f3d48b; color: #000; }
-        .btn-gold:hover { box-shadow: 0 0 20px rgba(243, 212, 139, 0.5); }
 
         /* --- Section Header with Lines --- */
         .section-header {
@@ -403,26 +405,16 @@
             font-size: 0.95rem;
         }
 
-        /* Loading Spinner */
-        .loading-spinner {
-            text-align: center;
-            padding: 60px 20px;
-            color: rgba(255, 255, 255, 0.5);
-            font-family: 'Kanit';
-            font-size: 0.9rem;
-        }
-
-        .sync-box {
-            margin-top: 15px;
+        .db-config-box {
+            margin-top: 20px;
             padding: 15px;
             background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
             border: 1px dashed rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 10px;
-            align-items: center;
-            justify-content: space-between;
+            text-align: left;
         }
 
         @media (max-width: 768px) {
@@ -516,26 +508,27 @@
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <div style="display: flex; gap: 10px;">
                     <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE DATA</button>
                     <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
-                    <button onclick="downloadRosterJSON()" class="btn-action btn-gold" title="ดาวน์โหลดไฟล์ roster.json ไปอัปโหลดขึ้น GitHub"><i class="fas fa-download"></i> ดาวน์โหลด roster.json</button>
                 </div>
 
-                <div class="sync-box">
-                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.7);"><i class="fas fa-info-circle"></i> <b>ทิปให้ทุกคนเห็นรายชื่อ:</b> กดปุ่ม <b>"ดาวน์โหลด roster.json"</b> แล้วลากไฟล์นี้ไปวางทับบน GitHub ได้เลยครับ</span>
-                    <button onclick="copyRosterJSON()" class="btn-action btn-secondary" style="font-size: 0.7rem;"><i class="fas fa-copy"></i> คัดลอก JSON</button>
+                <!-- Optional Firebase Online Database Setup -->
+                <div class="db-config-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: #f3d48b;"><i class="fas fa-database"></i> Firebase Realtime Database URL (สำหรับให้คนอื่นเห็นแบบ Real-time):</label>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="fbUrlInput" placeholder="https://your-project-default-rtdb.asia-southeast1.firebasedatabase.app/">
+                        <button onclick="saveDbUrl()" class="btn-action" style="font-size: 0.75rem; white-space: nowrap;"><i class="fas fa-link"></i> CONNECT</button>
+                    </div>
+                    <small style="font-size: 0.75rem; color: rgba(255,255,255,0.5);">* ใส่ลิงก์ฐานข้อมูล Firebase ของคุณเพียงครั้งเดียว ข้อมูลจะออนไลน์ให้ทุกคนในโลกเห็นพร้อมกันทันที</small>
                 </div>
             </div>
         </div>
 
         <!-- Roster Display Sections -->
         <div id="rosterDisplay">
-            <div id="loadingStatus" class="loading-spinner">
-                <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; margin-bottom: 10px;"></i>
-                <p>กำลังโหลดรายชื่อสมาชิก...</p>
-            </div>
-
             <!-- FOUNDERS -->
             <div id="section-founder" class="hidden">
                 <div class="section-header">
@@ -588,9 +581,60 @@
 
     <script>
         const LOCAL_STORAGE_KEY = "pedstyle_clean_roster";
+        const FIREBASE_URL_KEY = "pedstyle_fb_url";
+        
+        let db = null;
         let isAdmin = false;
         let deleteTargetId = null;
         let currentRoster = {};
+
+        // Initialize Firebase if configured
+        function initFirebase(url) {
+            if (!url) {
+                url = localStorage.getItem(FIREBASE_URL_KEY);
+            }
+            if (url) {
+                try {
+                    if (firebase.apps.length > 0) {
+                        firebase.app().delete();
+                    }
+                    firebase.initializeApp({ databaseURL: url });
+                    db = firebase.database();
+                    document.getElementById('fbUrlInput').value = url;
+                    
+                    // Realtime listener
+                    db.ref('roster').on('value', snap => {
+                        const val = snap.val();
+                        if (val) {
+                            currentRoster = val;
+                            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
+                            displayRosterData(currentRoster);
+                        }
+                    });
+                    console.log("Firebase connected successfully to:", url);
+                    return true;
+                } catch(e) {
+                    console.log("Firebase init error:", e);
+                }
+            }
+            return false;
+        }
+
+        function saveDbUrl() {
+            const url = document.getElementById('fbUrlInput').value.trim();
+            if(!url) return showToast("กรุณาใส่ URL ของ Firebase");
+            localStorage.setItem(FIREBASE_URL_KEY, url);
+            const ok = initFirebase(url);
+            if(ok) {
+                showToast("เชื่อมต่อ Firebase Database สำเร็จ!");
+                // Push local data to firebase
+                if(Object.keys(currentRoster).length > 0 && db) {
+                    db.ref('roster').set(currentRoster);
+                }
+            } else {
+                showToast("เชื่อมต่อไม่สำเร็จ กรุณาตรวจสอบ URL");
+            }
+        }
 
         function openAdminModal() {
             if(isAdmin) {
@@ -646,45 +690,10 @@
             setTimeout(() => t.remove(), 3000);
         }
 
-        // Fetch roster.json (Public for 100% of visitors around the globe)
-        async function fetchGlobalRoster() {
-            // First check local storage if admin edited locally
-            const localRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
-            if(localRaw && Object.keys(JSON.parse(localRaw)).length > 0) {
-                currentRoster = JSON.parse(localRaw);
-            }
-
-            try {
-                // Fetch public roster.json from repository with cache-buster
-                const res = await fetch('./roster.json?v=' + Date.now());
-                if(res.ok) {
-                    const data = await res.json();
-                    if(data && Object.keys(data).length > 0) {
-                        // Merge with local if not admin, or use roster.json as global source of truth
-                        if(!localRaw || Object.keys(JSON.parse(localRaw)).length === 0) {
-                            currentRoster = data;
-                            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
-                        } else {
-                            // If local has entries, keep local and merge
-                            currentRoster = { ...data, ...currentRoster };
-                        }
-                    }
-                }
-            } catch(e) {
-                console.log("Using local storage:", e);
-            }
-
-            return currentRoster;
-        }
-
-        async function loadAndRender() {
-            const loading = document.getElementById('loadingStatus');
-            if(loading) loading.style.display = 'block';
-            
-            const data = await fetchGlobalRoster();
-            
-            if(loading) loading.style.display = 'none';
-            displayRosterData(data);
+        function loadRoster() {
+            const raw = localStorage.getItem(LOCAL_STORAGE_KEY);
+            currentRoster = raw ? JSON.parse(raw) : {};
+            displayRosterData(currentRoster);
         }
 
         function renderRoster() {
@@ -792,6 +801,11 @@
 
             localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
 
+            // Sync to Firebase if connected
+            if (db) {
+                db.ref('roster/' + targetId).set(data);
+            }
+
             showToast(id ? "อัปเดตข้อมูลสำเร็จ!" : "เพิ่มสมาชิกสำเร็จ!");
             resetForm();
             displayRosterData(currentRoster);
@@ -807,6 +821,11 @@
             if(deleteTargetId) {
                 delete currentRoster[deleteTargetId];
                 localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
+                
+                if (db) {
+                    db.ref('roster/' + deleteTargetId).remove();
+                }
+
                 showToast("ลบข้อมูลสำเร็จ!");
                 closeModal('confirmModal');
                 displayRosterData(currentRoster);
@@ -833,32 +852,9 @@
             document.getElementById('saveBtn').innerHTML = "<i class='fas fa-check'></i> SAVE DATA";
         }
 
-        // Export/Download roster.json file to upload to GitHub
-        function downloadRosterJSON() {
-            const jsonStr = JSON.stringify(currentRoster, null, 2);
-            const blob = new Blob([jsonStr], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "roster.json";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            showToast("ดาวน์โหลดไฟล์ roster.json แล้ว! นำไปอัปโหลดขึ้น GitHub ได้เลย");
-        }
-
-        function copyRosterJSON() {
-            const jsonStr = JSON.stringify(currentRoster, null, 2);
-            navigator.clipboard.writeText(jsonStr).then(() => {
-                showToast("คัดลอก JSON แล้ว!");
-            }).catch(() => {
-                showToast("ไม่สามารถคัดลอกได้");
-            });
-        }
-
-        // Initialize Realtime Roster
-        loadAndRender();
+        // Initialize Local + Firebase
+        loadRoster();
+        initFirebase();
     </script>
 </body>
 </html>
