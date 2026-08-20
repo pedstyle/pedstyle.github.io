@@ -448,10 +448,6 @@
     <div id="youtube-player"></div>
 
     <script>
-        // Check if returning from member.html
-        const urlParams = new URLSearchParams(window.location.search);
-        const fromMember = urlParams.get('from') === 'member';
-
         // โหลด YouTube IFrame API
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -482,30 +478,7 @@
             });
         }
 
-        // บันทึกตำแหน่งวินาทีเพลงต่อเนื่อง
-        setInterval(() => {
-            if (player && typeof player.getCurrentTime === 'function' && typeof player.getPlayerState === 'function') {
-                const state = player.getPlayerState();
-                if (state === YT.PlayerState.PLAYING) {
-                    localStorage.setItem('ped_music_time', player.getCurrentTime());
-                    localStorage.setItem('ped_music_playing', 'true');
-                    localStorage.setItem('ped_music_stamp', Date.now());
-                } else if (state === YT.PlayerState.PAUSED) {
-                    localStorage.setItem('ped_music_playing', 'false');
-                }
-            }
-        }, 200);
-
-        // Auto-resume if returning from member page
-        window.addEventListener('DOMContentLoaded', () => {
-            if (fromMember) {
-                document.body.classList.add('loaded');
-                const overlay = document.getElementById('overlay');
-                if (overlay) overlay.classList.add('fade-out');
-            }
-        });
-
-        // เริ่มเข้าสู่เว็บไซต์เมื่อคลิก Overlay (เข้าใหม่ = เริ่มเพลงจาก 0:00)
+        // เริ่มเข้าสู่เว็บไซต์เมื่อคลิก Overlay (เริ่มใหม่จาก 00:00 เสมอ)
         function startWebsite() {
             document.body.classList.add('loaded');
             const overlay = document.getElementById('overlay');
@@ -514,7 +487,6 @@
             if (player && typeof player.playVideo === 'function') {
                 player.unMute();
                 player.setVolume(80);
-                // เข้าใหม่ให้เพลงเริ่มจากต้นเพลง (0:00)
                 player.seekTo(0, true);
                 player.playVideo();
             }
@@ -522,15 +494,6 @@
 
         function onPlayerReady(event) {
             updateTitle();
-            if (fromMember && player && typeof player.playVideo === 'function') {
-                player.unMute();
-                player.setVolume(80);
-                const savedTime = parseFloat(localStorage.getItem('ped_music_time') || '0');
-                if (savedTime > 0) {
-                    player.seekTo(savedTime, true);
-                }
-                player.playVideo();
-            }
         }
 
         function updateTitle() {

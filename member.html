@@ -608,8 +608,8 @@
             PEDSTYLE 2K26
         </div>
         <div style="display: flex; gap: 10px;">
-            <button onclick="window.location.href='index.html?from=member'" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
-            <button onclick="window.location.href='index.html?from=member'" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
+            <button onclick="window.location.href='index.html'" class="btn-action btn-secondary"><i class="fas fa-arrow-left"></i> BACK</button>
+            <button onclick="window.location.href='index.html'" class="btn-action btn-secondary"><i class="fas fa-home"></i> HOME</button>
             <button onclick="openAdminModal()" id="navAdmin" class="btn-action"><i class="fas fa-user-shield"></i> ADMIN</button>
         </div>
     </nav>
@@ -974,7 +974,7 @@
         initRealtimeRoster();
 
         // -------------------------------------------------------------
-        // 🎵 YOUTUBE MUSIC PLAYER & VINYL CONTROLS (SEAMLESS RESUME)
+        // 🎵 YOUTUBE MUSIC PLAYER & VINYL CONTROLS (ALWAYS 00:00 ON LOAD)
         // -------------------------------------------------------------
         var tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
@@ -1005,45 +1005,12 @@
             });
         }
 
-        // บันทึกตำแหน่งวินาทีเพลงต่อเนื่อง
-        setInterval(() => {
-            if (player && typeof player.getCurrentTime === 'function' && typeof player.getPlayerState === 'function') {
-                const state = player.getPlayerState();
-                if (state === YT.PlayerState.PLAYING) {
-                    localStorage.setItem('ped_music_time', player.getCurrentTime());
-                    localStorage.setItem('ped_music_playing', 'true');
-                    localStorage.setItem('ped_music_stamp', Date.now());
-                } else if (state === YT.PlayerState.PAUSED) {
-                    localStorage.setItem('ped_music_playing', 'false');
-                }
-            }
-        }, 200);
-
         function onPlayerReady(event) {
             updateTitle();
-            resumeOrPlayAudio();
-        }
-
-        function resumeOrPlayAudio() {
             if (player && typeof player.playVideo === 'function') {
                 player.unMute();
                 player.setVolume(80);
-
-                const savedTime = parseFloat(localStorage.getItem('ped_music_time') || '0');
-                const wasPlaying = localStorage.getItem('ped_music_playing') !== 'false';
-                const lastStamp = parseInt(localStorage.getItem('ped_music_stamp') || '0');
-
-                let seekToTime = savedTime;
-                if (lastStamp > 0 && wasPlaying) {
-                    const elapsed = (Date.now() - lastStamp) / 1000;
-                    if (elapsed < 60) {
-                        seekToTime += elapsed;
-                    }
-                }
-
-                if (seekToTime > 1) {
-                    player.seekTo(seekToTime, true);
-                }
+                player.seekTo(0, true);
                 player.playVideo();
             }
         }
@@ -1094,7 +1061,10 @@
         document.addEventListener('click', function initAudioOnInteraction() {
             if (player && typeof player.getPlayerState === 'function') {
                 if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                    resumeOrPlayAudio();
+                    player.unMute();
+                    player.setVolume(80);
+                    player.seekTo(0, true);
+                    player.playVideo();
                 }
             }
             document.removeEventListener('click', initAudioOnInteraction);
