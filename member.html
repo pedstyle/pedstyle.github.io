@@ -43,7 +43,7 @@
         }
         .modal-box {
             background: #111116; border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 30px; border-radius: 20px; width: 90%; max-width: 420px;
+            padding: 30px; border-radius: 20px; width: 90%; max-width: 440px;
             text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.05);
         }
         .modal-box h3 { font-family: 'Orbitron'; margin-bottom: 20px; color: #fff; letter-spacing: 2px; font-size: 1.1rem; }
@@ -123,6 +123,8 @@
         .btn-action:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(255, 255, 255, 0.4); }
         .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid var(--border-color); }
         .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+        .btn-gold { background: #f3d48b; color: #000; }
+        .btn-gold:hover { box-shadow: 0 0 20px rgba(243, 212, 139, 0.5); }
 
         /* --- Section Header with Lines --- */
         .section-header {
@@ -135,7 +137,6 @@
         .header-line {
             flex: 1;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
         }
         .section-title-badge {
             display: inline-flex;
@@ -145,12 +146,9 @@
             font-size: 1.05rem;
             font-weight: 900;
             letter-spacing: 3px;
-            color: #fff;
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
         }
         .header-icon {
             font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.9);
         }
         .section-count {
             font-size: 0.8rem;
@@ -166,10 +164,9 @@
             gap: 16px;
         }
 
-        /* --- Member Card Styling --- */
+        /* --- Member Card Base Styling --- */
         .member-card {
             background: var(--card-bg);
-            border: 1px solid var(--border-color);
             border-radius: 18px;
             padding: 14px 18px;
             display: flex;
@@ -181,12 +178,6 @@
             position: relative;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
-        }
-        .member-card:hover {
-            background: rgba(28, 28, 34, 0.85);
-            border-color: rgba(255, 255, 255, 0.22);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 15px rgba(255, 255, 255, 0.05);
         }
 
         .card-main {
@@ -217,10 +208,8 @@
             right: -2px;
             width: 9px;
             height: 9px;
-            background: #ffffff;
             border: 2px solid #141418;
             border-radius: 50%;
-            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
         }
 
         .card-info {
@@ -249,9 +238,6 @@
             letter-spacing: 2px;
             padding: 3px 10px;
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: rgba(255, 255, 255, 0.8);
         }
 
         /* --- Custom Role Border Colors & Glow --- */
@@ -266,7 +252,7 @@
         }
         .card-role-founder .card-role-badge {
             color: #f3d48b;
-            border-color: rgba(243, 212, 139, 0.5);
+            border: 1px solid rgba(243, 212, 139, 0.5);
             background: rgba(243, 212, 139, 0.1);
             box-shadow: 0 0 10px rgba(243, 212, 139, 0.2);
         }
@@ -295,7 +281,7 @@
         }
         .card-role-leader .card-role-badge {
             color: #ff4757;
-            border-color: rgba(255, 71, 87, 0.5);
+            border: 1px solid rgba(255, 71, 87, 0.5);
             background: rgba(255, 71, 87, 0.1);
             box-shadow: 0 0 10px rgba(255, 71, 87, 0.2);
         }
@@ -324,7 +310,7 @@
         }
         .card-role-member .card-role-badge {
             color: #e4e7eb;
-            border-color: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             background: rgba(255, 255, 255, 0.08);
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
@@ -353,8 +339,6 @@
         }
         .role-crown {
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.75);
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
         }
 
         .social-btns {
@@ -375,13 +359,6 @@
             text-decoration: none;
             font-size: 0.95rem;
             transition: all 0.3s ease;
-        }
-        .card-social-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-            color: #fff;
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         /* Admin Mini Edit/Delete Controls */
@@ -433,6 +410,19 @@
             color: rgba(255, 255, 255, 0.5);
             font-family: 'Kanit';
             font-size: 0.9rem;
+        }
+
+        .sync-box {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
         }
 
         @media (max-width: 768px) {
@@ -519,16 +509,22 @@
                     <div class="input-group">
                         <label>ตำแหน่ง (Role) *</label>
                         <select id="newRole">
-                            <option value="leader">Leader</option>
-                            <option value="founder">Founder</option>
-                            <option value="member">Member</option>
+                            <option value="leader">Leader (กรอบแดง)</option>
+                            <option value="founder">Founder (กรอบทอง)</option>
+                            <option value="member">Member (กรอบเทาแสง)</option>
                         </select>
                     </div>
                 </div>
 
-                <div style="display: flex; gap: 10px;">
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                     <button onclick="saveMember()" id="saveBtn" class="btn-action"><i class="fas fa-check"></i> SAVE DATA</button>
                     <button onclick="resetForm()" class="btn-action btn-secondary">RESET</button>
+                    <button onclick="downloadRosterJSON()" class="btn-action btn-gold" title="ดาวน์โหลดไฟล์ roster.json ไปอัปโหลดขึ้น GitHub"><i class="fas fa-download"></i> ดาวน์โหลด roster.json</button>
+                </div>
+
+                <div class="sync-box">
+                    <span style="font-size: 0.8rem; color: rgba(255,255,255,0.7);"><i class="fas fa-info-circle"></i> <b>ทิปให้ทุกคนเห็นรายชื่อ:</b> กดปุ่ม <b>"ดาวน์โหลด roster.json"</b> แล้วลากไฟล์นี้ไปวางทับบน GitHub ได้เลยครับ</span>
+                    <button onclick="copyRosterJSON()" class="btn-action btn-secondary" style="font-size: 0.7rem;"><i class="fas fa-copy"></i> คัดลอก JSON</button>
                 </div>
             </div>
         </div>
@@ -591,11 +587,7 @@
     </div>
 
     <script>
-        // Dedicated Cloud Realtime Database for PEDSTYLE
-        const CLOUD_DB_ID = "ff8081819ff5b11001a01d8c00785887";
-        const CLOUD_API_URL = `https://api.restful-api.dev/objects/${CLOUD_DB_ID}`;
         const LOCAL_STORAGE_KEY = "pedstyle_clean_roster";
-
         let isAdmin = false;
         let deleteTargetId = null;
         let currentRoster = {};
@@ -654,50 +646,42 @@
             setTimeout(() => t.remove(), 3000);
         }
 
-        // Fetch Roster from Cloud Database (visible to every visitor on internet)
-        async function fetchCloudRoster() {
+        // Fetch roster.json (Public for 100% of visitors around the globe)
+        async function fetchGlobalRoster() {
+            // First check local storage if admin edited locally
+            const localRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if(localRaw && Object.keys(JSON.parse(localRaw)).length > 0) {
+                currentRoster = JSON.parse(localRaw);
+            }
+
             try {
-                const res = await fetch(CLOUD_API_URL, { cache: 'no-store' });
+                // Fetch public roster.json from repository with cache-buster
+                const res = await fetch('./roster.json?v=' + Date.now());
                 if(res.ok) {
-                    const json = await res.json();
-                    if(json && json.data && json.data.roster) {
-                        currentRoster = json.data.roster;
-                        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
-                        return currentRoster;
+                    const data = await res.json();
+                    if(data && Object.keys(data).length > 0) {
+                        // Merge with local if not admin, or use roster.json as global source of truth
+                        if(!localRaw || Object.keys(JSON.parse(localRaw)).length === 0) {
+                            currentRoster = data;
+                            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
+                        } else {
+                            // If local has entries, keep local and merge
+                            currentRoster = { ...data, ...currentRoster };
+                        }
                     }
                 }
             } catch(e) {
-                console.log("Cloud fetch fallback to local:", e);
+                console.log("Using local storage:", e);
             }
-            const localRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
-            currentRoster = localRaw ? JSON.parse(localRaw) : {};
-            return currentRoster;
-        }
 
-        // Save Roster to Cloud Database
-        async function syncCloudRoster(rosterData) {
-            currentRoster = rosterData;
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(rosterData));
-            
-            try {
-                await fetch(CLOUD_API_URL, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: "pedstyle_official_roster",
-                        data: { roster: rosterData }
-                    })
-                });
-            } catch(e) {
-                console.log("Cloud sync error:", e);
-            }
+            return currentRoster;
         }
 
         async function loadAndRender() {
             const loading = document.getElementById('loadingStatus');
             if(loading) loading.style.display = 'block';
             
-            const data = await fetchCloudRoster();
+            const data = await fetchGlobalRoster();
             
             if(loading) loading.style.display = 'none';
             displayRosterData(data);
@@ -785,7 +769,7 @@
             });
         }
 
-        async function saveMember() {
+        function saveMember() {
             if(!isAdmin) return;
             const id = document.getElementById('editMemberId').value;
             const nameVal = document.getElementById('newName').value.trim();
@@ -806,12 +790,11 @@
             const targetId = id || ('m_' + Date.now());
             currentRoster[targetId] = data;
 
-            showToast(id ? "อัปเดตข้อมูลสำเร็จ..." : "กำลังบันทึกข้อมูล...");
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
+
+            showToast(id ? "อัปเดตข้อมูลสำเร็จ!" : "เพิ่มสมาชิกสำเร็จ!");
             resetForm();
             displayRosterData(currentRoster);
-
-            await syncCloudRoster(currentRoster);
-            showToast("บันทึกข้อมูลออนไลน์สำเร็จ!");
         }
 
         function askDeleteMember(id, name) {
@@ -820,15 +803,13 @@
             document.getElementById('confirmModal').style.display = 'flex';
         }
 
-        async function confirmDeleteMember() {
+        function confirmDeleteMember() {
             if(deleteTargetId) {
                 delete currentRoster[deleteTargetId];
-                showToast("กำลังลบข้อมูล...");
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentRoster));
+                showToast("ลบข้อมูลสำเร็จ!");
                 closeModal('confirmModal');
                 displayRosterData(currentRoster);
-
-                await syncCloudRoster(currentRoster);
-                showToast("ลบข้อมูลสำเร็จ!");
             }
         }
 
@@ -852,11 +833,32 @@
             document.getElementById('saveBtn').innerHTML = "<i class='fas fa-check'></i> SAVE DATA";
         }
 
+        // Export/Download roster.json file to upload to GitHub
+        function downloadRosterJSON() {
+            const jsonStr = JSON.stringify(currentRoster, null, 2);
+            const blob = new Blob([jsonStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "roster.json";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("ดาวน์โหลดไฟล์ roster.json แล้ว! นำไปอัปโหลดขึ้น GitHub ได้เลย");
+        }
+
+        function copyRosterJSON() {
+            const jsonStr = JSON.stringify(currentRoster, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                showToast("คัดลอก JSON แล้ว!");
+            }).catch(() => {
+                showToast("ไม่สามารถคัดลอกได้");
+            });
+        }
+
         // Initialize Realtime Roster
         loadAndRender();
-
-        // Auto poll for updates every 15 seconds so other visitors see updates live!
-        setInterval(fetchCloudRoster, 15000);
     </script>
 </body>
 </html>
