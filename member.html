@@ -21,6 +21,7 @@
             --bg-dark: #08080a;
             --card-bg: rgba(20, 20, 24, 0.75);
             --border-color: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.1);
             --danger: #ff4757;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -37,6 +38,7 @@
             font-family: 'Kanit', 'Rajdhani', sans-serif;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
         /* --- Custom Modals --- */
@@ -71,7 +73,7 @@
         }
         #brand-name img { width: 24px; height: 24px; object-fit: contain; filter: drop-shadow(0 0 8px rgba(255,255,255,0.7)); }
 
-        .container { max-width: 960px; margin: 0 auto; padding: 35px 20px 80px; }
+        .container { max-width: 960px; margin: 0 auto; padding: 35px 20px 100px; }
 
         /* --- Hero Title (Matching Homepage) --- */
         .page-hero-header {
@@ -405,10 +407,169 @@
             font-size: 0.95rem;
         }
 
+        /* --- Floating Vinyl Music Player (Bottom-Right) --- */
+        .vinyl-player-wrapper {
+            position: fixed;
+            bottom: 35px;
+            right: 35px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.5s ease;
+        }
+
+        .vinyl-info-box {
+            background: rgba(12, 12, 16, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 8px 14px;
+            max-width: 240px;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .vinyl-player-wrapper:hover .vinyl-info-box {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .vinyl-song-title {
+            font-size: 0.65rem;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 500;
+        }
+        .vinyl-status {
+            font-size: 0.5rem;
+            color: rgba(255,255,255,0.4);
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        /* Vinyl Disc Record */
+        .vinyl-disc {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: 
+                radial-gradient(circle, #080808 30%, #181818 32%, #080808 35%, #1c1c1c 38%, #080808 42%, #181818 46%, #080808 50%, #1c1c1c 55%, #080808 60%, #151515 65%, #080808 70%),
+                #111;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.05);
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            user-select: none;
+        }
+        .vinyl-disc:hover {
+            transform: scale(1.08);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.25);
+        }
+
+        /* Spinning Animation */
+        .vinyl-disc-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: rotateVinyl 6s linear infinite;
+            animation-play-state: paused;
+            position: relative;
+        }
+        .playing .vinyl-disc-inner {
+            animation-play-state: running;
+        }
+        .playing .vinyl-disc {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes rotateVinyl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Center Album Art Label */
+        .vinyl-label {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 8px rgba(0,0,0,0.8);
+        }
+        .vinyl-label img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Center Spindle Hole */
+        .vinyl-center-hole {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border: 1.5px solid #fff;
+            border-radius: 50%;
+            z-index: 5;
+        }
+
+        /* Play / Pause overlay icon on hover */
+        .vinyl-action-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 0.9rem;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            filter: drop-shadow(0 0 6px rgba(0,0,0,0.9));
+            pointer-events: none;
+        }
+        .vinyl-disc:hover .vinyl-action-icon {
+            opacity: 1;
+        }
+
+        #youtube-player { position: absolute; top: -1000px; left: -1000px; visibility: hidden; }
+
         @media (max-width: 768px) {
             .roster-grid { grid-template-columns: 1fr; }
             nav { padding: 15px 4%; }
             #brand-name { font-size: 0.95rem; }
+            .vinyl-player-wrapper {
+                bottom: 20px;
+                right: 20px;
+            }
+            .vinyl-disc {
+                width: 65px;
+                height: 65px;
+            }
+            .vinyl-label {
+                width: 30px;
+                height: 30px;
+            }
+            .vinyl-info-box {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -555,6 +716,26 @@
         </div>
     </div>
 
+    <!-- Vinyl Music Player (Bottom-Right) -->
+    <div class="vinyl-player-wrapper" id="player-container">
+        <div class="vinyl-info-box">
+            <div class="vinyl-song-title" id="music-title">The Weeknd, JENNIE - One Of The Girls</div>
+            <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY/PAUSE</div>
+        </div>
+
+        <div class="vinyl-disc" id="master-play" title="Click to Play / Pause">
+            <div class="vinyl-disc-inner">
+                <div class="vinyl-label">
+                    <img src="https://img.youtube.com/vi/f1r0XZLNlGQ/hqdefault.jpg" alt="Cover" id="music-cover">
+                </div>
+                <div class="vinyl-center-hole"></div>
+            </div>
+            <i class="fas fa-play vinyl-action-icon" id="play-icon"></i>
+        </div>
+    </div>
+
+    <div id="youtube-player"></div>
+
     <script>
         // -------------------------------------------------------------
         // 🌟 PEDSTYLE OFFICIAL FIREBASE REALTIME DATABASE CONFIGURATION
@@ -623,9 +804,8 @@
             setTimeout(() => t.remove(), 3000);
         }
 
-        // Realtime Listener from Firebase (Updates automatically on all devices worldwide in real-time)
+        // Realtime Listener from Firebase
         function initRealtimeRoster() {
-            // Purge any old local storage cache
             try {
                 localStorage.removeItem('pedstyle_clean_roster');
                 localStorage.removeItem('pedstyle_roster');
@@ -792,6 +972,100 @@
 
         // Initialize Realtime Sync
         initRealtimeRoster();
+
+        // -------------------------------------------------------------
+        // 🎵 YOUTUBE MUSIC PLAYER & VINYL CONTROLS
+        // -------------------------------------------------------------
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        var videoId = 'f1r0XZLNlGQ'; // The Weeknd, JENNIE & Lily Rose Depp - One Of The Girls
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '0', 
+                width: '0',
+                videoId: videoId,
+                playerVars: { 
+                    'autoplay': 1, 
+                    'loop': 1, 
+                    'playlist': videoId,
+                    'controls': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1,
+                    'iv_load_policy': 3
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            try {
+                player.unMute();
+                player.setVolume(80);
+                player.playVideo();
+            } catch(e) {}
+            updateTitle();
+        }
+
+        function updateTitle() {
+            try {
+                const videoData = player.getVideoData();
+                if (videoData && videoData.title) {
+                    document.getElementById('music-title').innerText = videoData.title;
+                } else {
+                    document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
+                }
+            } catch(e) {
+                document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            const icon = document.getElementById('play-icon');
+            const cont = document.getElementById('player-container');
+            const status = document.getElementById('music-status');
+            
+            // 1 = Playing, 2 = Paused
+            if (event.data == YT.PlayerState.PLAYING) {
+                icon.className = 'fas fa-pause vinyl-action-icon';
+                cont.classList.add('playing');
+                if (status) status.innerText = "NOW PLAYING";
+                updateTitle();
+            } else {
+                icon.className = 'fas fa-play vinyl-action-icon';
+                cont.classList.remove('playing');
+                if (status) status.innerText = "PAUSED";
+            }
+        }
+
+        // Click to Play / Pause Vinyl Player
+        document.getElementById('master-play').addEventListener('click', function() {
+            if (!player || typeof player.getPlayerState !== 'function') return;
+            const state = player.getPlayerState();
+            if (state == YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        });
+
+        // Autoplay on first user interaction if blocked by browser policy
+        document.addEventListener('click', function initAudioOnInteraction() {
+            if (player && typeof player.getPlayerState === 'function') {
+                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                    player.unMute();
+                    player.playVideo();
+                }
+            }
+            document.removeEventListener('click', initAudioOnInteraction);
+        }, { once: true });
     </script>
 </body>
 </html>

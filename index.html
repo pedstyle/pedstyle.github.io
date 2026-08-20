@@ -231,7 +231,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 12px;
             padding: 8px 14px;
-            max-width: 220px;
+            max-width: 240px;
             opacity: 0;
             transform: translateX(10px);
             transition: all 0.3s ease;
@@ -429,14 +429,14 @@
     <!-- Vinyl Music Player (Right Side) -->
     <div class="vinyl-player-wrapper" id="player-container">
         <div class="vinyl-info-box">
-            <div class="vinyl-song-title" id="music-title">Initializing...</div>
+            <div class="vinyl-song-title" id="music-title">The Weeknd, JENNIE - One Of The Girls</div>
             <div class="vinyl-status" id="music-status">CLICK DISC TO PLAY/PAUSE</div>
         </div>
 
         <div class="vinyl-disc" id="master-play" title="Click to Play / Pause">
             <div class="vinyl-disc-inner">
                 <div class="vinyl-label">
-                    <img src="https://img.youtube.com/vi/JcEeQh4Ov4M/maxresdefault.jpg" alt="Cover" id="music-cover">
+                    <img src="https://img.youtube.com/vi/f1r0XZLNlGQ/hqdefault.jpg" alt="Cover" id="music-cover">
                 </div>
                 <div class="vinyl-center-hole"></div>
             </div>
@@ -454,7 +454,7 @@
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
         var player;
-        var videoId = 'JcEeQh4Ov4M'; // PUN - รักให้เธอได้รู้ (Proof.)
+        var videoId = 'f1r0XZLNlGQ'; // The Weeknd, JENNIE & Lily Rose Depp - One Of The Girls
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('youtube-player', {
@@ -500,10 +500,10 @@
                 if (videoData && videoData.title) {
                     document.getElementById('music-title').innerText = videoData.title;
                 } else {
-                    document.getElementById('music-title').innerText = "System Audio Playing";
+                    document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
                 }
             } catch(e) {
-                document.getElementById('music-title').innerText = "System Audio Active";
+                document.getElementById('music-title').innerText = "The Weeknd, JENNIE - One Of The Girls";
             }
         }
 
