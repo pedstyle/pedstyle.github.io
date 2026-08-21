@@ -66,10 +66,23 @@
             pointer-events: none;
         }
 
+        /* --- â„ï¸ Falling Snow Canvas --- */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
         /* --- SPA Views --- */
         .spa-view {
             transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             width: 100%;
+            position: relative;
+            z-index: 2;
         }
 
         .spa-view.hidden-view {
@@ -301,6 +314,8 @@
             max-width: 1240px;
             margin: 0 auto;
             padding: 35px 20px 120px;
+            position: relative;
+            z-index: 2;
         }
 
         .page-hero-header {
@@ -385,6 +400,7 @@
             position: relative;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
+            z-index: 2;
         }
 
         .card-main {
@@ -610,6 +626,8 @@
             letter-spacing: 3px;
             font-family: 'Orbitron', sans-serif;
             border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            z-index: 2;
         }
 
         /* ================================================= */
@@ -915,6 +933,9 @@
     <div class="bg-wrapper"></div>
     <div class="vignette"></div>
 
+    <!-- â„ï¸ Falling Snow Canvas -->
+    <canvas id="snow-canvas"></canvas>
+
     <!-- ========================================== -->
     <!-- ðŸ  VIEW 1: HOME LANDING SCREEN             -->
     <!-- ========================================== -->
@@ -1081,6 +1102,75 @@
         })();
 
         /* ================================================= */
+        /* --- â„ï¸ AESTHETIC FALLING SNOW ENGINE --- */
+        /* ================================================= */
+        (function () {
+            const canvas = document.getElementById('snow-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            const particleCount = 75;
+            const particles = [];
+
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 2.2 + 0.8,
+                    density: Math.random() * particleCount,
+                    speedY: Math.random() * 0.9 + 0.4,
+                    speedX: Math.random() * 0.5 - 0.25,
+                    opacity: Math.random() * 0.6 + 0.25,
+                    swing: Math.random() * 2 * Math.PI,
+                    swingSpeed: Math.random() * 0.02 + 0.01
+                });
+            }
+
+            function drawSnow() {
+                ctx.clearRect(0, 0, width, height);
+
+                for (let i = 0; i < particleCount; i++) {
+                    const p = particles[i];
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+                    ctx.shadowColor = 'rgba(255, 255, 255, 0.4)';
+                    ctx.shadowBlur = p.radius > 2 ? 4 : 0;
+                    ctx.fill();
+
+                    // Movement update
+                    p.swing += p.swingSpeed;
+                    p.y += p.speedY;
+                    p.x += Math.sin(p.swing) * 0.6 + p.speedX;
+
+                    // Wrap around boundaries
+                    if (p.y > height + 10) {
+                        p.y = -10;
+                        p.x = Math.random() * width;
+                    }
+                    if (p.x > width + 10) {
+                        p.x = -10;
+                    } else if (p.x < -10) {
+                        p.x = width + 10;
+                    }
+                }
+
+                requestAnimationFrame(drawSnow);
+            }
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            drawSnow();
+        })();
+
+        /* ================================================= */
         /* --- ðŸ‘¥ OFFICIAL MEMBERS ROSTER DATA --- */
         /* ================================================= */
         const membersData = [
@@ -1144,7 +1234,7 @@
                 img: "https://cdn.discordapp.com/attachments/1537692655549681775/1540056080921403432/download_3.jpg?ex=6a88907e&is=6a873efe&hm=d766782c0aa581a27a6f7b4f1d29d6529f6db2e34633ef5a84092b88909e341c&"
             },
             {
-                name: "Nonggusdek Pedstyle",
+                name: "Gus Pedstyle",
                 role: "member",
                 fb: "https://www.facebook.com/profile.php?id=61591414257209",
                 img: "https://cdn.discordapp.com/attachments/1537692655549681775/1540035327262068746/ddddd.png?ex=6a887d2a&is=6a872baa&hm=0e5be526b25250468f5aaea24c795971307bb12875932a886ea8ccfd4864e541&"
@@ -1246,7 +1336,7 @@
                         <div style="display: flex; align-items: center; justify-content: space-between;">
                             <div class="card-main">
                                 <div class="avatar-wrap">
-                                    <img src="${displayImg}" alt="${item.name}" class="card-avatar" onerror="this.src='logo.png'">
+                                    <img src="${displayImg}" alt="${item.name}" class="card-avatar" referrerpolicy="no-referrer" onerror="this.src='logo.png'">
                                     <span class="status-dot"></span>
                                 </div>
                                 <div class="card-info">
